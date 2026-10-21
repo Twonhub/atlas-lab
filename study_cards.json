@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "name": "Femur",
+    "system": "Skeleton",
+    "fact": "The femur is the bone of the thigh and articulates proximally with the acetabulum.",
+    "source": "https://openstax.org/details/books/anatomy-and-physiology-2e"
+  },
+  {
+    "id": "2",
+    "name": "Humerus",
+    "system": "Skeleton",
+    "fact": "The humerus is the bone of the arm, between shoulder and elbow.",
+    "source": "https://openstax.org/details/books/anatomy-and-physiology-2e"
+  },
+  {
+    "id": "3",
+    "name": "Sternum",
+    "system": "Skeleton",
+    "fact": "The sternum is the anterior midline bone of the thoracic cage.",
+    "source": "https://openstax.org/details/books/anatomy-and-physiology-2e"
+  },
+  {
+    "id": "4",
+    "name": "Deltoid",
+    "system": "Muscular",
+    "fact": "The deltoid is a major muscle covering the shoulder; its middle fibers abduct the arm.",
+    "source": "https://openstax.org/details/books/anatomy-and-physiology-2e"
+  },
+  {
+    "id": "5",
+    "name": "Sciatic nerve",
+    "system": "Nervous",
+    "fact": "The sciatic nerve arises from the sacral plexus and travels through the posterior thigh.",
+    "source": "https://openstax.org/details/books/anatomy-and-physiology-2e"
+  }
+]
