@@ -31,7 +31,17 @@ function sync(){if(!viewer)return;const all=[...viewer.registry.values()];$("cou
  }
  if(selected){$("selectedSystem").textContent=selected.system;$("selectedName").textContent=selected.name;$("notes").value=progress.notes[selected.key]||"";$("markStudied").textContent=progress.studied.includes(selected.key)?"✓ Studied":"＋ Mark as studied";
   const card=study.find(c=>c.system===selected.system&&(c.name.toLowerCase()===selected.name.toLowerCase()||selected.name.toLowerCase().startsWith(c.name.toLowerCase()+" ")));
-  $("selectedExtras").textContent=card?card.fact+" — Educational summary; use source reference for verification.":"Structure name from source 3D dataset; not independently clinically validated.";
+  const detail=$("selectedExtras");detail.replaceChildren();
+  const suffix=selected.name.toLowerCase();
+  const side=suffix.endsWith(".l")?"Left anatomical side":suffix.endsWith(".r")?"Right anatomical side":"Midline / unpaired / not indicated";
+  const meta=document.createElement("p");meta.className="selected-meta";
+  meta.textContent="SOURCE STRUCTURE · "+selected.system.toUpperCase()+" · "+side;
+  detail.append(meta);
+  const summary=document.createElement("p");
+  summary.textContent=card?card.fact:"The atlas supplies the mesh name and geometry; this structure has not been assigned an independently verified description.";
+  detail.append(summary);
+  if(card?.source){const a=document.createElement("a");a.href=card.source;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Read anatomy textbook reference ↗";detail.append(a)}
+  const caveat=document.createElement("p");caveat.className="muted small";caveat.textContent="Highlighted mesh and pinned label identify the source-model structure. Individual mesh labels are not independently medically audited.";detail.append(caveat);
  }
  document.querySelectorAll("[data-study-id]").forEach(b=>{const card=study.find(c=>c.id===b.dataset.studyId);const e=card&&viewer.find(card.name,card.system);b.classList.toggle("active",!!(e&&e.key===viewer.selected))});
  $("layerList").innerHTML="";for(const s of viewer.systems()){let b=document.createElement("button");b.textContent=(viewer.enabled.has(s)?"☑ ":"□ ")+s;b.onclick=()=>viewer.activeRegion&&viewer.activeRegion!=="whole"?viewer.navigateRegion(viewer.activeRegion,s):viewer.setSystem(s,!viewer.enabled.has(s));$("layerList").append(b)}
