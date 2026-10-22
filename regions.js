@@ -48,9 +48,9 @@ export function installRegions(viewer,notify) {
  const baseApply=viewer.apply.bind(viewer);
  viewer.apply=(...args)=>{baseApply(...args)};
  viewer.clearRegion=()=>{viewer.activeRegion="whole";viewer.regionFilter=null;viewer.regionList=[];select.value="whole";
- if(viewer.setExplodeScope){viewer.setExplodeScope("selected");document.getElementById("explodeScope").value="selected";
+ if(viewer.setExplodeScope){viewer.setExplodeScope("whole");document.getElementById("explodeScope").value="whole";
   document.getElementById("explodeSlider").value=0;document.getElementById("explodeValue").textContent="0%"}
- info.textContent="Whole body • choose a structure to separate";viewer.apply()};
+ info.textContent="Whole body • all visible anatomy. Use the Dissect / Separate slider to spread structures, or select an anatomical region for a close-up.";viewer.apply()};
  async function go(){
    const token=++pending;
    const region=select.value,requestedSystem=sys.value,side=sideSelect.value;
