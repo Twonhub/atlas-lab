@@ -1,5 +1,7 @@
+import {installDissection} from "./dissection.js";
 import {AnatomyViewer} from "./viewer.js";
 const $=id=>document.getElementById(id);
+let lessonSession=null;
 let viewer,study=[],lessons=[],active=0,quiz=[],qi=0,score=0,meshExam=null;let progress={studied:[],notes:{},scores:[]};
 try{progress={...progress,...JSON.parse(localStorage.getItem("atlasLabV2")||"{}")}}catch{}
 const save=()=>{try{localStorage.setItem("atlasLabV2",JSON.stringify(progress))}catch{}};
@@ -35,7 +37,48 @@ $("notes").oninput=()=>{if(viewer?.selected){progress.notes[viewer.selected]=$("
 $("markStudied").onclick=()=>{if(!viewer?.selected)return;if(!progress.studied.includes(viewer.selected))progress.studied.push(viewer.selected);save();sync()};
 $("meshSearch").oninput=()=>{const q=$("meshSearch").value.trim(),list=$("searchResults");list.innerHTML="";if(q.length<2)return;for(const e of [...viewer.registry.values()].filter(e=>e.name.toLowerCase().includes(q.toLowerCase())).slice(0,25)){const b=document.createElement("button");b.textContent=e.name+" · "+e.system;b.onclick=()=>{viewer.enabled.add(e.system);viewer.select(e.key);viewer.focus(e);$("meshSearch").value=e.name;list.innerHTML=""};list.append(b)}};
 $("clearSearch").onclick=()=>{$("meshSearch").value="";$("searchResults").innerHTML=""};
-function renderLessons(){const menu=$("lessonMenu"),detail=$("lessonDetail");menu.innerHTML="";lessons.forEach((l,i)=>{const b=document.createElement("button");b.textContent=(i+1)+". "+l.title;b.onclick=()=>{active=i;showLesson()};menu.append(b)});showLesson();function showLesson(){const l=lessons[active];detail.innerHTML="";if(!l)return;const h=document.createElement("h2");h.textContent=l.title;const p=document.createElement("p");p.textContent=l.summary;const b=document.createElement("button");b.textContent="Open 3D lab";b.onclick=()=>show("lab");detail.append(h,p,b)}}
+function renderLessons(){
+  const menu=$("lessonMenu"),detail=$("lessonDetail");menu.innerHTML="";
+  lessons.forEach((l,i)=>{const button=document.createElement("button");button.textContent=(i+1)+". "+l.title;button.onclick=()=>{active=i;renderLessons()};if(active===i)button.classList.add("active");menu.append(button)});
+  const l=lessons[active];detail.innerHTML="";if(!l)return;
+  const title=document.createElement("h2");title.textContent=l.title;
+  const summary=document.createElement("p");summary.textContent=l.summary;
+  const note=document.createElement("p");note.className="muted";note.textContent="Each step now targets the corresponding 3D source mesh. If it is unavailable or not individually selectable, the app will tell you rather than point to a different structure.";
+  const heading=document.createElement("h3");heading.textContent="Locate these structures in 3D";
+  const targetList=document.createElement("div");targetList.className="lesson-targets";
+  for(const [i,name]of (l.targets||[]).entries()){const button=document.createElement("button");button.className="btn sm";button.textContent=(i+1)+". "+name+" ↗";button.onclick=()=>startLesson(active,i);targetList.append(button)}
+  const task=document.createElement("p");task.textContent=l.task||"Select and inspect each target.";
+  const start=document.createElement("button");start.className="btn primary";start.textContent="Start guided 3D lesson";start.onclick=()=>startLesson(active,0);
+  const next=document.createElement("button");next.className="btn";next.textContent="Next lesson →";next.onclick=()=>{active=(active+1)%lessons.length;renderLessons()};
+  const actions=document.createElement("div");actions.className="inline-actions";actions.append(start,next);
+  detail.append(title,summary,note,heading,targetList,task,actions);
+}
+function updateLessonDock(message=""){
+  const dock=$("lessonDock");if(!lessonSession){dock.hidden=true;return}
+  const lesson=lessons[lessonSession.lesson],step=lessonSession.step;
+  dock.hidden=false;
+  $("lessonDockTitle").textContent=lesson.title+" — "+(step+1)+"/"+lesson.targets.length+": "+lesson.targets[step];
+  $("lessonDockStatus").textContent=message||("Target: "+lesson.targets[step]+" · "+lesson.system+". Rotate, isolate or pull apart structures.");
+}
+async function startLesson(index,step=0){
+  lessonSession={lesson:index,step};active=index;show("lab");
+  updateLessonDock("Loading the anatomical layer and locating the target…");
+  await focusLessonStep();
+}
+async function focusLessonStep(){
+  if(!lessonSession)return;
+  const lesson=lessons[lessonSession.lesson],name=lesson.targets[lessonSession.step];
+  if(!viewer){updateLessonDock("The 3D viewer is not loaded. Reload the page.");return}
+  viewer.isolated=null;viewer.enabled=new Set([lesson.system]);
+  await viewer.setSystem(lesson.system,true);
+  const entry=await viewer.locateStudyTarget(name,lesson.system);
+  if(entry){updateLessonDock("Showing actual source mesh: "+entry.name+" ("+entry.system+").");status("Guided 3D lesson: "+entry.name)}
+  else{updateLessonDock("No individually identifiable mesh found for "+name+" in this source layer. Try the next target.");status("Not in the available "+lesson.system+" mesh labels: "+name)}
+}
+$("lessonFind").onclick=()=>focusLessonStep();
+$("lessonNext").onclick=()=>{if(!lessonSession)return;const l=lessons[lessonSession.lesson];lessonSession.step=(lessonSession.step+1)%l.targets.length;focusLessonStep()};
+$("lessonHide").onclick=()=>{if(!viewer?.selected){updateLessonDock("Find a structure before hiding it.");return}viewer.act("hide");updateLessonDock("Structure hidden. Choose Next or Find target to continue.")};
+$("lessonExit").onclick=()=>{lessonSession=null;updateLessonDock()};
 function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;list.innerHTML="";const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&(c.name+" "+c.fact).toLowerCase().includes(q));for(const c of filtered){const b=document.createElement("button");b.textContent=c.name+" · "+c.system;b.onclick=()=>{const d=$("cardDetail");d.innerHTML="";const h=document.createElement("h2");h.textContent=c.name;const p=document.createElement("p");p.textContent=c.fact;const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener";a.textContent="Reference ↗";const v=document.createElement("button");v.textContent="Find in 3D";v.onclick=async()=>{show("lab");const found=await viewer.findAndFocus(c.name,c.system);if(!found)status("No matching mesh located for "+c.name+" in loaded systems.",true)};d.append(h,p,a,document.createElement("hr"),v)};list.append(b)}}
 $("studySearch").oninput=renderCards;$("studyFilter").onchange=renderCards;
 $("startTextQuiz").onclick=()=>{quiz=[...study].sort(()=>Math.random()-.5).slice(0,Math.min(10,study.length));qi=0;score=0;renderQuestion()};
@@ -56,5 +99,5 @@ function renderProgress(){const e=$("progressView");e.innerHTML="";const h=docum
 $("exportBtn").onclick=()=>{const a=document.createElement("a"),url=URL.createObjectURL(new Blob([JSON.stringify(progress,null,2)],{type:"application/json"}));a.href=url;a.download="atlas-lab-progress.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)};
 $("importFile").onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text());if(!Array.isArray(data.studied)||!data.notes)throw Error("Invalid progress file");progress=data;save();renderProgress()}catch(err){alert(err.message)}};
 $("clearProgress").onclick=()=>{if(confirm("Reset saved study progress?")){progress={studied:[],notes:{},scores:[]};save();renderProgress()}};
-async function init(){try{[study,lessons]=await Promise.all([fetch("study_cards.json").then(r=>r.json()),fetch("lessons.json").then(r=>r.json())]);renderLessons();renderCards();const manifest=await fetch("asset_manifest.json").then(r=>r.json());viewer=new AnatomyViewer($("sceneRoot"),sync,status);sync();await viewer.configure(manifest)}catch(e){status("App initialization error: "+e.message,true);console.error(e)}}
+async function init(){try{[study,lessons]=await Promise.all([fetch("study_cards.json").then(r=>r.json()),fetch("lessons.json").then(r=>r.json())]);renderLessons();renderCards();const manifest=await fetch("asset_manifest.json").then(r=>r.json());viewer=new AnatomyViewer($("sceneRoot"),sync,status);sync();await viewer.configure(manifest);installDissection(viewer,status);sync()}catch(e){status("App initialization error: "+e.message,true);console.error(e)}}
 init();
