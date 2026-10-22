@@ -150,7 +150,15 @@ export function installDissection(viewer,notify) {
       else{e.target.value=0;$("explodeValue").textContent="0%"}
     });
   };
-  $("explodeScope").onchange=e=>{viewer.setExplodeScope(e.target.value);$("explodeSlider").value=0;$("explodeValue").textContent="0%"};
+  $("explodeScope").onchange=async e=>{
+   const scope=e.target.value;
+   viewer.setExplodeScope(scope);
+   $("explodeSlider").value=0;$("explodeValue").textContent="0%";
+   if(scope==="region"&&viewer.activeRegion==="whole"){
+     const auto=await viewer.openSelectedRegion?.();
+     if(!auto)notify("To separate a body region, choose Skull, Wrist, or another area in Body Region. You can also select a named bone, then choose Selected body region.")
+   }
+ };
   $("pullSelected").onclick=()=>{if(!viewer.pullSelected())notify("Select a structure first.")};
   $("resetSelected").onclick=()=>{if(!viewer.returnSelected())notify("Select a structure to restore its position.")};
   $("reassemble").onclick=()=>{viewer.reassemble();$("explodeSlider").value=0;$("explodeValue").textContent="0%"};
