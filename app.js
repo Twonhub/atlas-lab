@@ -125,10 +125,27 @@ $("lessonFind").onclick=()=>focusLessonStep();
 $("lessonNext").onclick=()=>{if(!lessonSession)return;const l=lessons[lessonSession.lesson];lessonSession.step=(lessonSession.step+1)%l.targets.length;focusLessonStep()};
 $("lessonHide").onclick=()=>{if(!viewer?.selected){updateLessonDock("Find a structure before hiding it.");return}viewer.act("hide");updateLessonDock("Structure hidden. Choose Next or Find target to continue.")};
 $("lessonExit").onclick=()=>{lessonSession=null;updateLessonDock()};
-function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;list.innerHTML="";const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&(c.name+" "+c.fact).toLowerCase().includes(q));for(const c of filtered){const b=document.createElement("button");b.textContent=c.name+" · "+c.system;b.dataset.studyId=c.id;b.classList.toggle("active",!!(viewer&&viewer.selected===viewer.find(c.name,c.system)?.key));b.onclick=async()=>{const d=$("cardDetail");d.innerHTML="";const h=document.createElement("h2");h.textContent=c.name;const p=document.createElement("p");p.textContent=c.fact;const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener";a.textContent="Reference ↗";const v=document.createElement("button");v.textContent="View highlighted structure in 3D";v.onclick=async()=>{show("lab");const found=await viewer.findAndFocus(c.name,c.system);if(!found)status("No matching mesh located for "+c.name+" in loaded systems.");else status(found.entry.name+" selected and labeled on the 3D body.")};
+async function openHeart(){
+ if(!viewer){status("3D anatomy has not finished loading.");return false}
+ show("lab");
+ const ok=await viewer.navigateRegion("heart","Cardiovascular");
+ if(ok)status("Heart anatomy: select the right atrium, left atrium, right ventricle, or left ventricle. Use the region part list for detailed study.");
+ else status("Heart chambers were not found in the downloaded cardiovascular model.");
+ return ok;
+}
+$("heartShortcut").onclick=openHeart;
+function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;list.innerHTML="";const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&(c.name+" "+c.fact).toLowerCase().includes(q));for(const c of filtered){const b=document.createElement("button");b.textContent=c.name+" · "+c.system;b.dataset.studyId=c.id;b.classList.toggle("active",!!(viewer&&c.name!=="Heart"&&viewer.selected===viewer.find(c.name,c.system)?.key));b.onclick=async()=>{const d=$("cardDetail");d.innerHTML="";const h=document.createElement("h2");h.textContent=c.name;const p=document.createElement("p");p.textContent=c.fact;const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener";a.textContent="Reference ↗";const v=document.createElement("button");v.textContent=c.name==="Heart"?"Explore cardiac chambers in 3D":"View highlighted structure in 3D";v.onclick=async()=>{if(c.name==="Heart"){await openHeart();return}show("lab");const found=await viewer.findAndFocus(c.name,c.system);if(!found)status("No matching mesh located for "+c.name+" in loaded systems.");else status(found.entry.name+" selected and labeled on the 3D body.")};
  const unselect=document.createElement("button");unselect.textContent="Deselect structure";unselect.onclick=()=>{viewer.select(null);status("Anatomical structure deselected.")};
  d.append(h,p,a,document.createElement("hr"),v,unselect);
- if(viewer){const already=viewer.find(c.name,c.system);
+ if(viewer){
+  if(c.name==="Heart"&&c.system==="Cardiovascular"){await openHeart();return}
+  if(c.system==="Cardiovascular"&&["Right atrium","Left atrium","Right ventricle","Left ventricle"].includes(c.name)){
+    await openHeart();const entry=viewer.find(c.name,c.system);
+    if(entry){viewer.select(entry.key);viewer.focus(entry);status("Cardiac chamber selected: "+entry.name)}
+    else status("No exact cardiac chamber mesh found: "+c.name);
+    return
+  }
+  const already=viewer.find(c.name,c.system);
    if(already){if(viewer.selected===already.key)viewer.select(null);else{viewer.enabled.add(c.system);already.hidden=false;if(viewer.regionFilter&&!viewer.regionFilter.has(already.key))viewer.clearRegion?.();viewer.select(already.key)}}
    else await viewer.setSystem(c.system,true).then(()=>{const entry=viewer.find(c.name,c.system);if(entry){viewer.select(entry.key)}else status("No matching source mesh located for "+c.name+".",false)});
  }};list.append(b)}}
