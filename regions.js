@@ -13,6 +13,7 @@ export const REGIONS=[
  ["wrist","Wrist / carpals",["scaphoid","lunate","triquetrum","pisiform","trapezium","trapezoid","capitate","hamate"]],
  ["hand","Hand & fingers",["scaphoid","lunate","triquetrum","pisiform","trapezium","trapezoid","capitate","hamate","metacarp","phalange","phalanx"]],
  ["thorax","Chest & ribs",["sternum","rib","thoracic vertebra","vertebra t"]],
+ ["heart","Heart & cardiac chambers",["left atrium","right atrium","left ventricle","right ventricle"]],
  ["abdomen","Abdomen",["lumbar vertebra","vertebra l"]],
  ["spine","Vertebral column",["vertebra","atlas","axis","sacrum","coccyx"]],
  ["pelvis","Pelvis & hip",["ilium","ischium","pubis","pelvis","hip bone","sacrum"]],
@@ -55,11 +56,14 @@ export function installRegions(viewer,notify) {
    if(region==="whole"){viewer.clearRegion();viewer.fitAll();return true}
    info.textContent="Locating "+select.selectedOptions[0].textContent+" in the source anatomy…";
    if(!viewer.groups.has("Skeleton"))await viewer.setSystem("Skeleton",true);
+   if(region==="heart"&&!viewer.groups.has("Cardiovascular"))await viewer.setSystem("Cardiovascular",true);
    if(system!=="Skeleton"&&!viewer.groups.has(system))await viewer.setSystem(system,true);
    if(token!==pending)return false;
    const regionDef=REGIONS.find(r=>r[0]===region),terms=regionDef[2];
    const skeletal=[...viewer.registry.values()].filter(e=>e.system==="Skeleton");
-   let matches=skeletal.filter(e=>terms.some(t=>alias(normalize(e.name),t)));
+   const heart=region==="heart";
+   const anchorSource=heart?[...viewer.registry.values()].filter(e=>e.system==="Cardiovascular"):skeletal;
+   let matches=anchorSource.filter(e=>terms.some(t=>alias(normalize(e.name),t)));
    const lateral=new Set(["shoulder","upperarm","elbow","forearm","wrist","hand","pelvis","thigh","knee","leg","ankle","foot"]);
    if(side!=="both"&&lateral.has(region)){
      matches=matches.filter(e=>e.name.toLowerCase().endsWith(side==="left"?".l":".r"));
@@ -84,7 +88,7 @@ export function installRegions(viewer,notify) {
    if(box.isEmpty()){info.textContent="Region mesh bounds unavailable.";return false}
    const body=new THREE.Box3();for(const e of skeletal)body.union(meshBounds(e));
    const h=Math.max(.01,body.getSize(new THREE.Vector3()).length());
-   const pad=Math.max(h*.008,box.getSize(new THREE.Vector3()).length()*.065);
+   const pad=heart?Math.max(h*.005,box.getSize(new THREE.Vector3()).length()*.20):Math.max(h*.008,box.getSize(new THREE.Vector3()).length()*.065);
    box.expandByScalar(pad);
    /* Exclude long anchor bones extending beyond the region by using spatial limits for
       elbow, shoulder and knee only when there are multiple anchor bones. */
@@ -101,11 +105,13 @@ export function installRegions(viewer,notify) {
    viewer.regionFilter=allowed;viewer.enabled=new Set([system]);viewer.isolated=null;
    if(viewer.selected&&!allowed.has(viewer.selected))viewer.selected=null;
    viewer.apply();viewer.refreshRegionList();viewer.boxFocus(box);
-   info.textContent=regionDef[1]+" · "+system+" · "+(side==="both"?"both sides":side)+" · "+allowed.size+" selectable structures (spatial estimate from source models)";
+   info.textContent=heart?
+     "Heart anatomy · "+allowed.size+" visible "+system+" source structures. The four cardiac chambers are separate selectable meshes; no single whole-heart mesh is provided.":
+     regionDef[1]+" · "+system+" · "+(side==="both"?"both sides":side)+" · "+allowed.size+" selectable structures (spatial estimate from source models)";
    return true
  }
  document.getElementById("regionJump").onclick=go;
- select.onchange=go;sys.onchange=go;sideSelect.onchange=go;
+ select.onchange=()=>{if(select.value==="heart")sys.value="Cardiovascular";go()};sys.onchange=go;sideSelect.onchange=go;
  clear.onclick=()=>{viewer.clearRegion();viewer.fitAll()};
  viewer.navigateRegion=async(region,system="Skeleton")=>{if(!REGIONS.find(r=>r[0]===region))return false;select.value=region;sys.value=system;return go()};
  viewer.onRegionSelectionChanged=()=>{if(viewer.activeRegion!=="whole")renderList()};
