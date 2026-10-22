@@ -124,16 +124,65 @@ export class AnatomyViewer {
  updateClipping(){const d=this.camera.position.distanceTo(this.controls.target);this.camera.near=Math.max(.0000001,d/10000);this.camera.far=Math.max(1,d*1500);this.camera.updateProjectionMatrix()}
  async configure(manifest){this.manifest=manifest;await this.setSystem("Skeleton",true)}
  systems(){return Object.keys(this.manifest)}
- async setSystem(sys,on){if(on)this.enabled.add(sys);else this.enabled.delete(sys);
-  if(on&&!this.groups.has(sys)){this.status("Loading "+sys+" anatomy…");try{const gltf=await this.loader.loadAsync(this.manifest[sys]);let g=new THREE.Group();this.scene.add(g);let meshes=[];gltf.scene.traverse(x=>{if(x.isMesh&&x.geometry)meshes.push(x)});
-  if(!meshes.length)throw Error("No individually selectable meshes were found");
-  for(const m of meshes){m.updateMatrixWorld(true);g.attach(m);const name=m.userData?.za_name||m.name||"Unnamed structure",key=sys+"::"+name;
-   if(!this.registry.has(key))this.registry.set(key,{key,name,system:sys,meshes:[],hidden:false,ghost:false});
-   this.registry.get(key).meshes.push(m);m.userData.atlasKey=key;m.userData.original=m.material;
-  }this.groups.set(sys,g);if(this.groups.size===1)this.fitAll();this.status(sys+" loaded: "+meshes.length+" meshes")}
-  catch(e){this.enabled.delete(sys);this.status(sys+" failed to load: "+e.message,true)}}
-  this.apply();this.changed(this);
+ async setSystem(sys,on){
+  if(!this.manifest[sys]){this.status("Unknown anatomical system: "+sys,true);return false}
+  if(!on){
+    this.enabled.delete(sys);this.apply();return true
+  }
+  this.enabled.add(sys);
+  if(this.groups.has(sys)){this.apply();return true}
+  // Multiple clicks and region changes must share one model load.
+  this.loadingSystems ||= new Map();
+  if(this.loadingSystems.has(sys)){await this.loadingSystems.get(sys);this.apply();return this.groups.has(sys)}
+  const task=(async()=>{
+   this.status("Loading "+sys+" anatomy…");
+   try{
+    const gltf=await this.loader.loadAsync(this.manifest[sys]);
+    gltf.scene.updateMatrixWorld(true);
+    // This atlas puts each anatomical structure's authoritative name on
+    // a parent Object3D's userData.za_name, not necessarily on its Mesh.
+    // Find the nearest named ancestor BEFORE flattening the graph. Reading
+    // only m.name creates opaque mesh IDs and makes all regions unfindable.
+    const meshes=[];
+    gltf.scene.traverse(node=>{if(node.isMesh&&node.geometry)meshes.push(node)});
+    if(!meshes.length)throw Error("No anatomical meshes in the model");
+    const parts=new Map(),anonymous=[];
+    for(const mesh of meshes){
+      let owner=mesh,partName="";
+      while(owner&&owner!==gltf.scene.parent){
+       const candidate=owner.userData?.za_name||owner.userData?.partId;
+       if(typeof candidate==="string"&&candidate.trim()){partName=candidate.trim();break}
+       owner=owner.parent
+      }
+      if(!partName){anonymous.push(mesh);continue}
+      const key=sys+"::"+partName;
+      if(!parts.has(key))parts.set(key,{key,name:partName,system:sys,meshes:[],hidden:false,ghost:false});
+      parts.get(key).meshes.push(mesh)
+    }
+    if(!parts.size)throw Error("Anatomical labels not found in 3D source nodes");
+    const group=new THREE.Group();this.scene.add(group);group.updateMatrixWorld(true);
+    for(const [key,entry] of parts){
+      for(const mesh of entry.meshes){
+        group.attach(mesh); // preserve world-space anatomy while flattening nested nodes
+        mesh.userData.atlasKey=key;
+        mesh.userData.original=mesh.material
+      }
+      this.registry.set(key,entry)
+    }
+    this.groups.set(sys,group);
+    if(this.groups.size===1)this.fitAll();
+    this.status(sys+" loaded: "+parts.size+" named structures ("+meshes.length+" meshes)."+(anonymous.length?" "+anonymous.length+" unlabeled meshes excluded.":""));
+   }catch(e){
+     this.enabled.delete(sys);
+     this.status(sys+" failed to load: "+e.message,true)
+   }
+  })();
+  this.loadingSystems.set(sys,task);
+  try{await task}finally{this.loadingSystems.delete(sys)}
+  this.apply();
+  return this.groups.has(sys)
  }
+
  apply(){for(const x of this.registry.values()){let visible=this.enabled.has(x.system)&&!x.hidden&&(!this.isolated||x.key===this.isolated);for(const m of x.meshes){m.visible=visible;const orig=m.userData.original;
   if(visible&&(x.key===this.selected||x.ghost)){const arr=(Array.isArray(orig)?orig:[orig]).map(o=>{const c=o.clone();if(x.ghost){c.transparent=true;c.opacity=.18;c.depthWrite=false}if(x.key===this.selected){c.emissive=new THREE.Color("#1fbbaa");c.emissiveIntensity=.5}return c});m.material=Array.isArray(orig)?arr:arr[0]}else m.material=orig;}}
   this.changed(this)}
