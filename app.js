@@ -89,7 +89,7 @@ document.addEventListener("fullscreenchange",()=>{
 window.addEventListener("resize",()=>requestAnimationFrame(fitWorkspace));
 window.addEventListener("keydown",e=>{
  if(!viewer||!$("page-lab").classList.contains("active")||e.altKey||e.metaKey||e.ctrlKey
-    ||["INPUT","TEXTAREA","SELECT","BUTTON"].includes(document.activeElement?.tagName))return;
+    ||["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName))return;
  const key=e.key.toLowerCase();
  if(key==="f"){e.preventDefault();fullscreenButton.click();return}
  if(key==="escape"){viewer.select(null);return}
