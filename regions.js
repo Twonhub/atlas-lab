@@ -52,66 +52,144 @@ export function installRegions(viewer,notify) {
   document.getElementById("explodeSlider").value=0;document.getElementById("explodeValue").textContent="0%"}
  info.textContent="Whole body • choose a structure to separate";viewer.apply()};
  async function go(){
-   const token=++pending;const region=select.value,system=sys.value,side=sideSelect.value;
+   const token=++pending;
+   const region=select.value,requestedSystem=sys.value,side=sideSelect.value;
    if(region==="whole"){viewer.clearRegion();viewer.fitAll();return true}
-   info.textContent="Locating "+select.selectedOptions[0].textContent+" in the source anatomy…";
-   if(!viewer.groups.has("Skeleton"))await viewer.setSystem("Skeleton",true);
-   if(region==="heart"&&!viewer.groups.has("Cardiovascular"))await viewer.setSystem("Cardiovascular",true);
-   if(system!=="Skeleton"&&!viewer.groups.has(system))await viewer.setSystem(system,true);
-   if(token!==pending)return false;
-   const regionDef=REGIONS.find(r=>r[0]===region),terms=regionDef[2];
-   const skeletal=[...viewer.registry.values()].filter(e=>e.system==="Skeleton");
+   const regionDef=REGIONS.find(r=>r[0]===region);
+   if(!regionDef){info.textContent="Select a valid anatomical region.";return false}
    const heart=region==="heart";
-   const anchorSource=heart?[...viewer.registry.values()].filter(e=>e.system==="Cardiovascular"):skeletal;
-   let matches=anchorSource.filter(e=>terms.some(t=>alias(normalize(e.name),t)));
-   const lateral=new Set(["shoulder","upperarm","elbow","forearm","wrist","hand","pelvis","thigh","knee","leg","ankle","foot"]);
-   if(side!=="both"&&lateral.has(region)){
-     matches=matches.filter(e=>e.name.toLowerCase().endsWith(side==="left"?".l":".r"));
-   }
-   if(region==="elbow"||region==="knee"){matches=matches.filter(e=>!e.name.toLowerCase().includes("phalange"))}
-   if(!matches.length){
-     info.textContent="No named skeletal anchors found for this region. The atlas may use different names.";
-     viewer.clearRegion();notify("No confirmed model anchors for "+regionDef[1]+". Try searching a bone by name.");return false;
-   }
-   const box=new THREE.Box3();for(const e of matches)box.union(meshBounds(e));
-   // Restrict long-bone regions to their joint level instead of encompassing the entire arm/leg.
-   const jointTypes={elbow:["humerus","radius"],knee:["femur","tibia"],shoulder:["humerus","clavicle"]};
-   if(jointTypes[region]){
-     const terms2=jointTypes[region],first=matches.filter(e=>normalize(e.name).includes(terms2[0])),second=matches.filter(e=>normalize(e.name).includes(terms2[1]));
-     if(first.length&&second.length){const a=new THREE.Box3(),b=new THREE.Box3();for(const e of first)a.union(meshBounds(e));for(const e of second)b.union(meshBounds(e));
-       const y=region==="shoulder"?(a.max.y+b.getCenter(new THREE.Vector3()).y)/2:(a.min.y+b.max.y)/2;
-       const full=new THREE.Box3();for(const e of skeletal)full.union(meshBounds(e));
-       const half=full.getSize(new THREE.Vector3()).y*.045;
-       box.min.y=y-half;box.max.y=y+half;
+   info.textContent="Loading and focusing "+regionDef[1]+"…";
+   try{
+     // Hide model movement before computing world-space bounds. A previous
+     // explosion can otherwise cause a region to be focused on empty space.
+     if(viewer.explodeAmount>0)viewer.setExplosion(0);
+     if(!viewer.groups.has("Skeleton"))await viewer.setSystem("Skeleton",true);
+     if(heart&&!viewer.groups.has("Cardiovascular"))await viewer.setSystem("Cardiovascular",true);
+     if(requestedSystem!=="Skeleton"&&!viewer.groups.has(requestedSystem))await viewer.setSystem(requestedSystem,true);
+     if(token!==pending)return false;
+     const skeletal=[...viewer.registry.values()].filter(e=>e.system==="Skeleton");
+     const anchors=heart?[...viewer.registry.values()].filter(e=>e.system==="Cardiovascular"):skeletal;
+     if(!skeletal.length||!anchors.length){
+       info.textContent="This model layer did not load. Check the model status and reload if necessary.";
+       notify(info.textContent);return false
      }
+     const terms=regionDef[2];
+     let matched=anchors.filter(e=>terms.some(t=>alias(normalize(e.name),t)));
+     const lateral=new Set(["shoulder","upperarm","elbow","forearm","wrist","hand","pelvis","thigh","knee","leg","ankle","foot"]);
+     const bilateral=lateral.has(region);
+     if(bilateral&&side!=="both"){
+       matched=matched.filter(e=>e.name.toLowerCase().endsWith(side==="left"?".l":".r"));
+     }
+     if(!matched.length){
+       info.textContent="No matching 3D anchor found for "+regionDef[1]+" ("+side+"). Try Both sides or a different system.";
+       notify(info.textContent);return false
+     }
+     // IMPORTANT: left and right wrists / hands must not form one enormous
+     // selection box running through the torso. Use an independent bounds
+     // volume for each side, then union only their camera framing bounds.
+     const groups=[];
+     if(bilateral&&side==="both"){
+       for(const suffix of [".l",".r"]){
+         const chunk=matched.filter(e=>e.name.toLowerCase().endsWith(suffix));
+         if(chunk.length)groups.push(chunk)
+       }
+       const unpaired=matched.filter(e=>!/\.(l|r)$/i.test(e.name));
+       if(unpaired.length)groups.push(unpaired)
+     }else groups.push(matched);
+     const bodyBounds=new THREE.Box3();
+     for(const e of skeletal)bodyBounds.union(meshBounds(e));
+     const bodySpan=Math.max(.01,bodyBounds.getSize(new THREE.Vector3()).length());
+     const joint={elbow:["humerus","radius"],knee:["femur","tibia"],shoulder:["humerus","clavicle"]};
+     const localBoxes=[];
+     for(const members of groups){
+       const box=new THREE.Box3();
+       for(const e of members)box.union(meshBounds(e));
+       if(box.isEmpty())continue;
+       // Long bones span entire limbs. Limit joint views near the articulation.
+       if(joint[region]){
+         const [a,b]=joint[region];
+         const ea=members.filter(e=>normalize(e.name).includes(a));
+         const eb=members.filter(e=>normalize(e.name).includes(b));
+         if(ea.length&&eb.length){
+           const aa=new THREE.Box3(),bb=new THREE.Box3();
+           for(const e of ea)aa.union(meshBounds(e));
+           for(const e of eb)bb.union(meshBounds(e));
+           const level=region==="shoulder"?(aa.max.y+bb.getCenter(new THREE.Vector3()).y)/2:(aa.min.y+bb.max.y)/2;
+           const half=bodyBounds.getSize(new THREE.Vector3()).y*.05;
+           box.min.y=level-half;box.max.y=level+half;
+         }
+       }
+       if(box.isEmpty())continue;
+       const extent=box.getSize(new THREE.Vector3()).length();
+       const pad=Math.max(bodySpan*.0035,extent*(heart?.20:.09));
+       box.expandByScalar(pad);
+       localBoxes.push(box)
+     }
+     if(!localBoxes.length){info.textContent="Could not calculate the 3D position of this region.";return false}
+     const viewBox=new THREE.Box3();for(const b of localBoxes)viewBox.union(b);
+     function entriesFor(system){
+       const selected=new Set();
+       for(const e of viewer.registry.values()){
+         if(e.system!==system)continue;
+         const b=meshBounds(e);
+         if(b.isEmpty())continue;
+         const center=b.getCenter(new THREE.Vector3());
+         for(const volume of localBoxes){
+           const size=b.getSize(new THREE.Vector3()).length();
+           const fits=volume.containsPoint(center)||(volume.intersectsBox(b)&&size<volume.getSize(new THREE.Vector3()).length()*1.6);
+           if(fits){selected.add(e.key);break}
+         }
+       }
+       // Always retain named anchor bones for Skeletal, even when boundaries
+       // at a joint are tight; otherwise key wrist bones can disappear.
+       if(system==="Skeleton"&&!heart){
+         for(const e of matched)selected.add(e.key)
+       }
+       // Cardiac chambers are the required heart anchors.
+       if(system==="Cardiovascular"&&heart){
+         for(const e of matched)selected.add(e.key)
+       }
+       return selected
+     }
+     let usedSystem=requestedSystem,allowed=entriesFor(usedSystem);
+     if(!allowed.size&&usedSystem!=="Skeleton"&&!heart){
+       // Never silently reset the BODY REGION selector back to Whole body.
+       // Offer a reliable skeletal view if a selected tissue system has no
+       // individually modeled objects in this specific 3D area.
+       usedSystem="Skeleton";allowed=entriesFor(usedSystem);
+     }
+     if(!allowed.size){
+       info.textContent="The "+requestedSystem+" source model has no selectable structures here. Try Skeleton or another anatomical system.";
+       notify(info.textContent);return false
+     }
+     viewer.activeRegion=region;viewer.regionFilter=allowed;
+     viewer.enabled=new Set([usedSystem]);viewer.isolated=null;
+     if(viewer.selected&&!allowed.has(viewer.selected))viewer.selected=null;
+     sys.value=usedSystem;
+     if(viewer.setExplodeScope){
+       viewer.setExplodeScope("region");
+       document.getElementById("explodeScope").value="region";
+       document.getElementById("explodeSlider").value=0;
+       document.getElementById("explodeValue").textContent="0%"
+     }
+     viewer.apply();viewer.refreshRegionList();
+     viewer.boxFocus(viewBox);
+     info.textContent=regionDef[1]+" · "+usedSystem+" · "+(bilateral?side+" side":side)+
+       " · "+allowed.size+" selectable parts"+(usedSystem!==requestedSystem?" (No "+requestedSystem+" mesh here; showing Skeleton instead)":"");
+     return true
+   }catch(err){
+     console.error("Atlas Lab region navigation",err);
+     info.textContent="This region could not be opened: "+(err?.message||String(err));
+     notify(info.textContent);return false
    }
-   if(box.isEmpty()){info.textContent="Region mesh bounds unavailable.";return false}
-   const body=new THREE.Box3();for(const e of skeletal)body.union(meshBounds(e));
-   const h=Math.max(.01,body.getSize(new THREE.Vector3()).length());
-   const pad=heart?Math.max(h*.005,box.getSize(new THREE.Vector3()).length()*.20):Math.max(h*.008,box.getSize(new THREE.Vector3()).length()*.065);
-   box.expandByScalar(pad);
-   /* Exclude long anchor bones extending beyond the region by using spatial limits for
-      elbow, shoulder and knee only when there are multiple anchor bones. */
-   viewer.activeRegion=region;
-   if(viewer.setExplodeScope){viewer.setExplodeScope("region");document.getElementById("explodeScope").value="region";
-    document.getElementById("explodeSlider").value="0";document.getElementById("explodeValue").textContent="0%"}
-   const allowed=new Set();
-   for(const e of viewer.registry.values()){
-     if(e.system!==system)continue;
-     const b=meshBounds(e),center=b.getCenter(new THREE.Vector3());
-     if(box.containsPoint(center)||box.intersectsBox(b)&&b.getSize(new THREE.Vector3()).length()<box.getSize(new THREE.Vector3()).length()*1.8)allowed.add(e.key)
-   }
-   if(!allowed.size){viewer.regionFilter=null;viewer.activeRegion="whole";info.textContent="No "+system+" meshes found in this area. Change the system or region.";notify(info.textContent);viewer.apply();return false}
-   viewer.regionFilter=allowed;viewer.enabled=new Set([system]);viewer.isolated=null;
-   if(viewer.selected&&!allowed.has(viewer.selected))viewer.selected=null;
-   viewer.apply();viewer.refreshRegionList();viewer.boxFocus(box);
-   info.textContent=heart?
-     "Heart anatomy · "+allowed.size+" visible "+system+" source structures. The four cardiac chambers are separate selectable meshes; no single whole-heart mesh is provided.":
-     regionDef[1]+" · "+system+" · "+(side==="both"?"both sides":side)+" · "+allowed.size+" selectable structures (spatial estimate from source models)";
-   return true
  }
  document.getElementById("regionJump").onclick=go;
- select.onchange=()=>{if(select.value==="heart")sys.value="Cardiovascular";go()};sys.onchange=go;sideSelect.onchange=go;
+ select.onchange=()=>{const lateral=new Set(["shoulder","upperarm","elbow","forearm","wrist","hand","pelvis","thigh","knee","leg","ankle","foot"]);
+  if(select.value==="heart")sys.value="Cardiovascular";
+  else if(select.value!=="whole")sys.value="Skeleton";
+  if(lateral.has(select.value)&&sideSelect.value==="both")sideSelect.value="left";
+  go();
+};sys.onchange=go;sideSelect.onchange=go;
  clear.onclick=()=>{viewer.clearRegion();viewer.fitAll()};
  viewer.navigateRegion=async(region,system="Skeleton")=>{if(!REGIONS.find(r=>r[0]===region))return false;select.value=region;sys.value=system;return go()};
  viewer.onRegionSelectionChanged=()=>{if(viewer.activeRegion!=="whole")renderList()};
