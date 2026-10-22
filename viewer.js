@@ -88,7 +88,7 @@ export class AnatomyViewer {
  apply(){for(const x of this.registry.values()){let visible=this.enabled.has(x.system)&&!x.hidden&&(!this.isolated||x.key===this.isolated);for(const m of x.meshes){m.visible=visible;const orig=m.userData.original;
   if(visible&&(x.key===this.selected||x.ghost)){const arr=(Array.isArray(orig)?orig:[orig]).map(o=>{const c=o.clone();if(x.ghost){c.transparent=true;c.opacity=.18;c.depthWrite=false}if(x.key===this.selected){c.emissive=new THREE.Color("#1fbbaa");c.emissiveIntensity=.5}return c});m.material=Array.isArray(orig)?arr:arr[0]}else m.material=orig;}}
   this.changed(this)}
- visibleEntries(){return [...this.registry.values()].filter(x=>this.enabled.has(x.system)&&!x.hidden&&(!this.isolated||this.isolated===x.key))}
+ visibleEntries(){return [...this.registry.values()].filter(x=>this.enabled.has(x.system)&&!x.hidden&&(!this.isolated||this.isolated===x.key)&&(!this.regionFilter||this.regionFilter.has(x.key)))}
  pick(e){const b=this.renderer.domElement.getBoundingClientRect(),p=new THREE.Vector2((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);this.raycaster.setFromCamera(p,this.camera);const a=this.raycaster.intersectObjects([...this.registry.values()].flatMap(x=>x.meshes).filter(x=>x.visible),false);this.pickedFromCanvas=true;try{if(a.length)this.select(a[0].object.userData.atlasKey,true,a[0]);else this.select(null)}finally{this.pickedFromCanvas=false}}
  select(key,toggle=false,hit=null){
    const next=toggle&&this.selected===key?null:key;
@@ -104,7 +104,7 @@ export class AnatomyViewer {
  act(action){if(action==="showAll"){this.snapshot();this.isolated=null;for(const x of this.registry.values()){x.hidden=false;x.ghost=false}this.apply();return}const e=this.registry.get(this.selected);if(!e)return;this.snapshot();if(action==="hide"){e.hidden=true;this.selected=null}if(action==="isolate")this.isolated=this.isolated===e.key?null:e.key;if(action==="ghost")e.ghost=!e.ghost;if(action==="focus")this.focus(e);this.apply()}
  boxFocus(b){if(b.isEmpty())return;const size=b.getSize(new THREE.Vector3()),center=b.getCenter(new THREE.Vector3()),span=Math.max(size.x,size.y,size.z,.01),dist=span/(2*Math.tan(this.camera.fov*Math.PI/360))*1.6;this.controls.target.copy(center);this.camera.position.copy(center).add(new THREE.Vector3(0,0,dist));this.controls.minDistance=Math.max(.0000001,span*.002);this.controls.maxDistance=span*100;this.updateClipping();this.controls.update()}
  focus(e){const b=new THREE.Box3();for(const m of e.meshes)b.expandByObject(m);this.boxFocus(b);this.labelHit=null}
- fitAll(){const b=new THREE.Box3();for(const x of this.registry.values())for(const m of x.meshes)b.expandByObject(m);this.boxFocus(b)}
+ fitAll(){const b=new THREE.Box3();for(const x of this.visibleEntries())for(const m of x.meshes)b.expandByObject(m);this.boxFocus(b)}
  view(which){this.fitAll();const c=this.controls.target,d=this.camera.position.distanceTo(c);if(which==="back")this.camera.position.set(c.x,c.y,c.z-d);if(which==="side")this.camera.position.set(c.x+d,c.y,c.z);this.controls.update()}
  find(q,sys){const a=q.toLowerCase().trim();return [...this.registry.values()].find(x=>(!sys||x.system===sys)&&x.name.toLowerCase().includes(a))}
  async findAndFocus(q,sys,{toggle=false}={}){if(sys&&!this.groups.has(sys))await this.setSystem(sys,true);const e=this.find(q,sys);if(!e)return false;
