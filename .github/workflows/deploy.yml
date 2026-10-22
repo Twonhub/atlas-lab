@@ -44,7 +44,7 @@ jobs:
           curl -fL --retry 4 "${base}/License.txt" -o _site/models/License.txt
           curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/LICENSE -o _site/UPSTREAM_LICENSE.txt
           curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/NOTICE -o _site/UPSTREAM_NOTICE.txt
-          cp index.html app.js viewer.js styles.css study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md MODEL_LICENSE_AND_ATTRIBUTION.md _site/
+          cp index.html app.js viewer.js dissection.js styles.css study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md MODEL_LICENSE_AND_ATTRIBUTION.md _site/
           touch _site/.nojekyll
           python3 - <<'PYMANIFEST'
           import json,pathlib
