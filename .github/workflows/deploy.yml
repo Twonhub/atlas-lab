@@ -28,6 +28,7 @@ jobs:
           node --check dissection.js
           node --check regions.js
           node --check anatomy_info.js
+          node --test qa/regions.test.cjs
           python3 - <<'PYLESSONS'
           import json
           lessons=json.load(open('lessons.json'))
