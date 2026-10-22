@@ -103,3 +103,14 @@ html,body{min-height:100%;overscroll-behavior:none}
 .card-detail{max-height:calc(100dvh - 230px);overflow:auto}
 @media(max-width:1020px){.study-list,.card-detail{max-height:none}}
 @media(max-width:650px){.nav-tool-control{flex:1 1 42%}.camera-workspace .microhelp{font-size:10px}}
+
+/* Unified mouse/trackpad movement: always-on gestures, no tool selector */
+.nav-shortcuts{display:grid;gap:4px;flex:1 1 300px;min-width:240px;padding:8px 10px;border:1px solid #31536a;border-radius:10px;background:#10283b}
+.nav-shortcuts strong{color:#e9f5f9;font-size:13px;line-height:1.3}
+.nav-shortcuts span{font-size:12px;color:#a6cbd5;line-height:1.5}
+#regionInfo{min-height:20px;font-weight:500}
+#regionInfo:not(:empty){white-space:normal}
+#regionJump{font-weight:700}
+#sceneRoot canvas{cursor:grab;user-select:none;-webkit-user-select:none}
+#sceneRoot canvas:active{cursor:grabbing}
+@media(max-width:700px){.nav-shortcuts{flex-basis:100%;min-width:0}.camera-workspace{align-items:center}}
