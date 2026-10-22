@@ -36,6 +36,7 @@ export function installDissection(viewer,notify) {
     if(bb.isEmpty())return null;
     return {members,center:bb.getCenter(new THREE.Vector3()),extent:Math.max(bb.getSize(new THREE.Vector3()).length(),height*.08)};
   }
+  let regionCache=null;
   function shift(e){
     const result=e.pullOffset?e.pullOffset.clone():new THREE.Vector3();
     if(viewer.explodeAmount<=0)return result;
@@ -48,7 +49,7 @@ export function installDissection(viewer,notify) {
       result.addScaledVector(right,viewer.explodeAmount*size*.55);
     }else if(viewer.explodeScope==="region"){
       if(!viewer.regionFilter?.has(e.key))return result;
-      const data=currentRegion();if(!data)return result;
+      const data=regionCache;if(!data)return result;
       const center=centers.get(e.key);if(!center)return result;
       const dir=center.clone().sub(data.center);
       // Preserve anatomical relationships: move only parts inside the chosen
@@ -65,6 +66,7 @@ export function installDissection(viewer,notify) {
   function move(e){const offset=shift(e);for(const m of e.meshes){const p=homes.get(m);if(p)m.position.copy(p).add(offset)}}
   viewer.apply=function(){
     prepare();
+    regionCache=viewer.explodeScope==="region"&&viewer.explodeAmount>0?currentRegion():null;
     for(const e of viewer.registry.values()){
       move(e);
       const visible=viewer.enabled.has(e.system)&&!e.hidden&&(!viewer.isolated||viewer.isolated===e.key)&&(!viewer.regionFilter||viewer.regionFilter.has(e.key));
