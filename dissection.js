@@ -151,7 +151,6 @@ export function installDissection(viewer,notify) {
     });
   };
   $("explodeScope").onchange=e=>{viewer.setExplodeScope(e.target.value);$("explodeSlider").value=0;$("explodeValue").textContent="0%"};
-  $("pullMode").onclick=()=>{viewer.setGrabMode(!viewer.grabMode);$("pullMode").setAttribute("aria-pressed",String(viewer.grabMode));$("pullMode").textContent="✥ Grab & pull: "+(viewer.grabMode?"On":"Off")};
   $("pullSelected").onclick=()=>{if(!viewer.pullSelected())notify("Select a structure first.")};
   $("resetSelected").onclick=()=>{if(!viewer.returnSelected())notify("Select a structure to restore its position.")};
   $("reassemble").onclick=()=>{viewer.reassemble();$("explodeSlider").value=0;$("explodeValue").textContent="0%"};
