@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {OrbitControls} from "three/addons/controls/OrbitControls.js";
 import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
 import {DRACOLoader} from "three/addons/loaders/DRACOLoader.js";
+import {resolveSourcePartName} from "./model_naming.js";
 export class AnatomyViewer {
  constructor(root,changed,status) {
   this.root=root;this.changed=changed;this.status=status;this.registry=new Map();this.groups=new Map();this.enabled=new Set(["Skeleton"]);this.selected=null;this.isolated=null;this.history=[];this.manifest={};
@@ -148,12 +149,7 @@ export class AnatomyViewer {
     if(!meshes.length)throw Error("No anatomical meshes in the model");
     const parts=new Map(),anonymous=[];
     for(const mesh of meshes){
-      let owner=mesh,partName="";
-      while(owner&&owner!==gltf.scene.parent){
-       const candidate=owner.userData?.za_name||owner.userData?.partId;
-       if(typeof candidate==="string"&&candidate.trim()){partName=candidate.trim();break}
-       owner=owner.parent
-      }
+      const partName=resolveSourcePartName(mesh,gltf.scene);
       if(!partName){anonymous.push(mesh);continue}
       const key=sys+"::"+partName;
       if(!parts.has(key))parts.set(key,{key,name:partName,system:sys,meshes:[],hidden:false,ghost:false});
