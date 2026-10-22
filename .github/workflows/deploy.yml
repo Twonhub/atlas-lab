@@ -28,7 +28,7 @@ jobs:
           node --check dissection.js
           node --check regions.js
           node --check anatomy_info.js
-          node --test qa/regions.test.cjs qa/model_naming.test.cjs
+          node --test qa/regions.test.cjs qa/model_naming.test.cjs qa/dissection.test.cjs
           node --check model_naming.js
           python3 - <<'PYLESSONS'
           import json
