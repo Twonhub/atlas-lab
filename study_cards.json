@@ -362,9 +362,9 @@
   {
     "id": "f031",
     "name": "Heart",
-    "system": "Visceral",
+    "system": "Cardiovascular",
     "region": "Thorax",
-    "fact": "The heart pumps blood through pulmonary and systemic circulation.",
+    "fact": "The heart drives pulmonary and systemic circulation. This 3D source atlas represents its right and left atria and ventricles as individually selectable structures, rather than one mesh named Heart.",
     "question": "Which organ pumps blood through the pulmonary and systemic circuits?",
     "answer": "Heart",
     "source_name": "OpenStax Anatomy & Physiology 2e",
