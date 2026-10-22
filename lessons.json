@@ -1,7 +1,7 @@
 [
   {
-    "title": "Anatomical position",
-    "summary": "Identify anatomical left/right, proximal/distal, medial/lateral, and anterior/posterior on the human body.",
+    "title": "Anatomical position and directions",
+    "summary": "Compare anatomical left and right, and proximal, distal, medial and lateral positions.",
     "system": "Skeleton",
     "targets": [
       "Clavicle",
@@ -9,24 +9,25 @@
       "Radius",
       "Ulna"
     ],
-    "task": "View the radius and ulna in anatomical position. Rotate the arm and compare the lateral radius with the medial ulna."
+    "task": "Identify the radius on the thumb side and the ulna on the little-finger side in anatomical position."
   },
   {
-    "title": "Axial skeleton",
-    "summary": "Learn the bones of the skull, vertebral column, and thoracic cage.",
+    "title": "Axial skeleton and landmarks",
+    "summary": "Examine the skull, breastbone and first two cervical vertebrae.",
     "system": "Skeleton",
     "targets": [
       "Frontal bone",
       "Mandible",
-      "Sternum",
-      "Atlas",
-      "Axis"
+      "Manubrium of sternum",
+      "Body of sternum",
+      "Atlas (C1)",
+      "Axis (C2)"
     ],
-    "task": "Inspect the anterior and posterior skull, then isolate the sternum and identify the uppermost cervical vertebrae."
+    "task": "Use posterior and lateral views to distinguish C1 from C2 and the manubrium from the body of the sternum."
   },
   {
     "title": "Appendicular skeleton",
-    "summary": "Work proximally to distally through the shoulder, arm, hip, thigh, and leg.",
+    "summary": "Trace the pectoral girdle and upper and lower limb bones.",
     "system": "Skeleton",
     "targets": [
       "Scapula",
@@ -38,24 +39,25 @@
       "Tibia",
       "Fibula"
     ],
-    "task": "Pull the femur from the lower limb; identify where it articulates with the pelvis and tibia."
+    "task": "Pull the femur away and examine its relationship to the pelvis and tibia."
   },
   {
-    "title": "Rotator cuff and shoulder",
-    "summary": "Examine the deltoid and the four rotator-cuff muscles of the shoulder.",
+    "title": "Shoulder and rotator cuff",
+    "summary": "Find the actual deltoid portions and rotator cuff muscles in the 3D atlas.",
     "system": "Muscular",
     "targets": [
-      "Deltoid",
-      "Supraspinatus",
-      "Infraspinatus",
-      "Teres minor",
-      "Subscapularis"
+      "Acromial part of deltoid muscle",
+      "Clavicular part of deltoid muscle",
+      "Supraspinatus muscle",
+      "Infraspinatus muscle",
+      "Teres minor muscle",
+      "Subscapularis muscle"
     ],
-    "task": "Select and move the deltoid to expose deeper shoulder anatomy. Some source meshes may be combined."
+    "task": "Pull the superficial deltoid portions aside to study the deeper rotator cuff."
   },
   {
     "title": "Peripheral nerves",
-    "summary": "Follow named peripheral nerves through the limbs.",
+    "summary": "Identify major upper and lower limb peripheral nerves.",
     "system": "Nervous",
     "targets": [
       "Radial nerve",
@@ -63,20 +65,34 @@
       "Sciatic nerve",
       "Femoral nerve"
     ],
-    "task": "Isolate a nerve and rotate around it to understand its course relative to the limb."
+    "task": "Follow the course of each nerve and compare its relationship with nearby bones and muscles."
   },
   {
-    "title": "Thoracic and abdominal organs",
-    "summary": "Explore the topographic relations of thoracic and abdominal organs.",
+    "title": "Respiratory and digestive organs",
+    "summary": "Identify the precise pulmonary lobes and other visceral structures present in the atlas.",
     "system": "Visceral",
     "targets": [
-      "Heart",
-      "Lung",
+      "Superior lobe of right lung",
+      "Middle lobe of right lung",
+      "Inferior lobe of left lung",
+      "Trachea",
       "Liver",
       "Stomach",
       "Pancreas",
       "Kidney"
     ],
-    "task": "Pull organs away from the body and view their positions from the anterior and posterior perspectives."
+    "task": "Remove pulmonary lobes one at a time to view the trachea and underlying upper abdominal organs."
+  },
+  {
+    "title": "Cardiac chambers",
+    "summary": "Explore the heart using the chambers available in the atlas's cardiovascular system.",
+    "system": "Cardiovascular",
+    "targets": [
+      "Right atrium",
+      "Left atrium",
+      "Right ventricle",
+      "Left ventricle"
+    ],
+    "task": "Isolate each cardiac chamber and rotate the model to understand the relationship between atria and ventricles."
   }
 ]
