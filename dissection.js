@@ -39,7 +39,7 @@ export function installDissection(viewer,notify) {
     prepare();
     for(const e of viewer.registry.values()){
       move(e);
-      const visible=viewer.enabled.has(e.system)&&!e.hidden&&(!viewer.isolated||viewer.isolated===e.key);
+      const visible=viewer.enabled.has(e.system)&&!e.hidden&&(!viewer.isolated||viewer.isolated===e.key)&&(!viewer.regionFilter||viewer.regionFilter.has(e.key));
       for(const m of e.meshes){
         m.visible=visible;const original=m.userData.original;
         if(!visible||(!e.ghost&&viewer.selected!==e.key)){m.material=original;continue}
@@ -47,7 +47,7 @@ export function installDissection(viewer,notify) {
         const cache=m.userData.labMaterials||(m.userData.labMaterials={});
         if(!cache[kind]){
           const source=Array.isArray(original)?original:[original];
-          const mats=source.map(o=>{const c=o.clone();if(kind==="selected"&&c.emissive){c.emissive.set(0x20c3b7);c.emissiveIntensity=.6}if(kind==="ghost"){c.transparent=true;c.opacity=.16;c.depthWrite=false}return c});
+          const mats=source.map(o=>{const c=o.clone();if(kind==="selected"){if(c.emissive){c.emissive.set(0xf7c84b);c.emissiveIntensity=.85}if(c.color)c.color.lerp(new THREE.Color(0xffeaa2),.62)}if(kind==="ghost"){c.transparent=true;c.opacity=.16;c.depthWrite=false}return c});
           cache[kind]=Array.isArray(original)?mats:mats[0];
         }
         m.material=cache[kind];
