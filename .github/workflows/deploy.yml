@@ -19,14 +19,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
-      - name: Prepare static website
+      - name: Validate sources and download licensed 3D meshes
+        shell: bash
         run: |
-          mkdir -p _site
-          cp index.html app.js viewer.js styles.css asset_manifest.json study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md _site/
-          touch _site/.nojekyll
+          set -euo pipefail
           python3 -m json.tool asset_manifest.json >/dev/null
           python3 -m json.tool study_cards.json >/dev/null
           python3 -m json.tool lessons.json >/dev/null
+          mkdir -p _site/models
+          base=https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models
+          for layer in skeletal joints muscular arterial venous nervous visceral; do
+            echo "Downloading verified geometry: ${layer}"
+            curl -fL --retry 4 --retry-delay 3 "${base}/${layer}.glb" -o "_site/models/${layer}.glb"
+            python3 - "${layer}" <<'PYVALID'
+          import pathlib,struct,sys
+          path=pathlib.Path("_site/models")/(sys.argv[1]+".glb")
+          raw=path.read_bytes()
+          assert len(raw)>4096 and raw[:4]==b"glTF", f"Invalid GLB: {path}"
+          assert struct.unpack("<I",raw[4:8])[0]==2, f"Invalid GLB version: {path}"
+          assert struct.unpack("<I",raw[8:12])[0]==len(raw), f"GLB truncated: {path}"
+          print(path.name,len(raw),"bytes validated")
+          PYVALID
+          done
+          curl -fL --retry 4 "${base}/License.txt" -o _site/models/License.txt
+          curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/LICENSE -o _site/UPSTREAM_LICENSE.txt
+          curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/NOTICE -o _site/UPSTREAM_NOTICE.txt
+          cp index.html app.js viewer.js styles.css study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md MODEL_LICENSE_AND_ATTRIBUTION.md _site/
+          touch _site/.nojekyll
+          python3 - <<'PYMANIFEST'
+          import json,pathlib
+          src=json.loads(pathlib.Path("asset_manifest.json").read_text())
+          data={k:"models/"+v.rsplit("/",1)[-1] for k,v in src.items()}
+          assert len(data)==7
+          pathlib.Path("_site/asset_manifest.json").write_text(json.dumps(data,indent=2))
+          print("Prepared model manifest:",list(data))
+          PYMANIFEST
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
