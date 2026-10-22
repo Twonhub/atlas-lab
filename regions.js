@@ -46,7 +46,10 @@ export function installRegions(viewer,notify) {
  viewer.refreshRegionList=()=>{if(viewer.activeRegion==="whole"){viewer.regionList=[];renderList();return}const system=sys.value;viewer.regionList=[...viewer.registry.values()].filter(e=>e.system===system&&viewer.regionFilter?.has(e.key)).sort((a,b)=>a.name.localeCompare(b.name));renderList()};
  const baseApply=viewer.apply.bind(viewer);
  viewer.apply=(...args)=>{baseApply(...args)};
- viewer.clearRegion=()=>{viewer.activeRegion="whole";viewer.regionFilter=null;viewer.regionList=[];select.value="whole";info.textContent="Whole body • all visible structures in selected systems";viewer.apply()};
+ viewer.clearRegion=()=>{viewer.activeRegion="whole";viewer.regionFilter=null;viewer.regionList=[];select.value="whole";
+ if(viewer.setExplodeScope){viewer.setExplodeScope("selected");document.getElementById("explodeScope").value="selected";
+  document.getElementById("explodeSlider").value=0;document.getElementById("explodeValue").textContent="0%"}
+ info.textContent="Whole body • choose a structure to separate";viewer.apply()};
  async function go(){
    const token=++pending;const region=select.value,system=sys.value,side=sideSelect.value;
    if(region==="whole"){viewer.clearRegion();viewer.fitAll();return true}
@@ -86,6 +89,8 @@ export function installRegions(viewer,notify) {
    /* Exclude long anchor bones extending beyond the region by using spatial limits for
       elbow, shoulder and knee only when there are multiple anchor bones. */
    viewer.activeRegion=region;
+   if(viewer.setExplodeScope){viewer.setExplodeScope("region");document.getElementById("explodeScope").value="region";
+    document.getElementById("explodeSlider").value="0";document.getElementById("explodeValue").textContent="0%"}
    const allowed=new Set();
    for(const e of viewer.registry.values()){
      if(e.system!==system)continue;
