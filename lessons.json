@@ -1,26 +1,82 @@
 [
   {
-    "title": "Orientation and anatomical position",
-    "summary": "Distinguish left and right, anterior and posterior, superior and inferior."
+    "title": "Anatomical position",
+    "summary": "Identify anatomical left/right, proximal/distal, medial/lateral, and anterior/posterior on the human body.",
+    "system": "Skeleton",
+    "targets": [
+      "Clavicle",
+      "Humerus",
+      "Radius",
+      "Ulna"
+    ],
+    "task": "View the radius and ulna in anatomical position. Rotate the arm and compare the lateral radius with the medial ulna."
   },
   {
     "title": "Axial skeleton",
-    "summary": "Identify skull, vertebrae, ribs, and sternum."
+    "summary": "Learn the bones of the skull, vertebral column, and thoracic cage.",
+    "system": "Skeleton",
+    "targets": [
+      "Frontal bone",
+      "Mandible",
+      "Sternum",
+      "Atlas",
+      "Axis"
+    ],
+    "task": "Inspect the anterior and posterior skull, then isolate the sternum and identify the uppermost cervical vertebrae."
   },
   {
     "title": "Appendicular skeleton",
-    "summary": "Identify shoulder girdle, upper limb, pelvic girdle, and lower limb."
+    "summary": "Work proximally to distally through the shoulder, arm, hip, thigh, and leg.",
+    "system": "Skeleton",
+    "targets": [
+      "Scapula",
+      "Clavicle",
+      "Humerus",
+      "Radius",
+      "Ulna",
+      "Femur",
+      "Tibia",
+      "Fibula"
+    ],
+    "task": "Pull the femur from the lower limb; identify where it articulates with the pelvis and tibia."
   },
   {
-    "title": "Muscle layering",
-    "summary": "Hide superficial muscles to examine deeper structures."
+    "title": "Rotator cuff and shoulder",
+    "summary": "Examine the deltoid and the four rotator-cuff muscles of the shoulder.",
+    "system": "Muscular",
+    "targets": [
+      "Deltoid",
+      "Supraspinatus",
+      "Infraspinatus",
+      "Teres minor",
+      "Subscapularis"
+    ],
+    "task": "Select and move the deltoid to expose deeper shoulder anatomy. Some source meshes may be combined."
   },
   {
     "title": "Peripheral nerves",
-    "summary": "Locate major named nerves by region."
+    "summary": "Follow named peripheral nerves through the limbs.",
+    "system": "Nervous",
+    "targets": [
+      "Radial nerve",
+      "Median nerve",
+      "Sciatic nerve",
+      "Femoral nerve"
+    ],
+    "task": "Isolate a nerve and rotate around it to understand its course relative to the limb."
   },
   {
-    "title": "Organs and body cavities",
-    "summary": "Compare thoracic, abdominal, and pelvic organs."
+    "title": "Thoracic and abdominal organs",
+    "summary": "Explore the topographic relations of thoracic and abdominal organs.",
+    "system": "Visceral",
+    "targets": [
+      "Heart",
+      "Lung",
+      "Liver",
+      "Stomach",
+      "Pancreas",
+      "Kidney"
+    ],
+    "task": "Pull organs away from the body and view their positions from the anterior and posterior perspectives."
   }
 ]
