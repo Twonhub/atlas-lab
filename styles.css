@@ -19,3 +19,58 @@
 #selectedDetail h2{color:#ffe6a1}#backToLibrary{margin-bottom:10px}
 #sceneRoot{touch-action:none}
 @media(max-width:800px){.region-picker label{flex:1 1 42%}.camera-workspace .microhelp{flex-basis:100%}}
+
+
+/* Screen-fit workspace: controls stay usable on laptops; the model grows to fill
+   the remaining viewport instead of forcing a fixed-height anatomy canvas. */
+html,body{min-height:100%;overscroll-behavior:none}
+#app{height:100dvh;min-height:0;overflow:hidden;grid-template-columns:clamp(190px,15vw,230px) minmax(0,1fr)}
+#app>.sidebar{height:100dvh;min-height:0;overflow:auto}
+#app>main{height:100dvh;min-height:0;overflow-y:auto;overscroll-behavior-y:contain}
+.topbar{padding:12px 20px 6px}
+.page{padding:0 20px 16px}
+.lab-toolbar{padding:5px 0}
+.region-workspace{margin:5px 0;padding:9px 12px}
+.region-head{margin-bottom:5px}
+.region-picker select{height:33px;padding:4px 8px}
+.camera-workspace{padding:6px 9px;margin:5px 0}
+.camera-workspace button{padding:6px 9px}
+.dissect-strip{padding:8px 11px;margin:5px 0 8px}
+.explode-control{flex:0 1 auto;min-width:365px;flex-wrap:wrap;gap:7px}
+.explode-control select{width:auto;min-width:155px;padding:7px}
+.explode-control input{width:110px}
+.lab-grid{height:clamp(340px,calc(100dvh - 315px),1100px);min-height:0;align-items:stretch}
+.model-panel{min-height:0;height:100%}
+#sceneRoot{height:100%;min-height:0;border:1px solid #30586a}
+.inspector{height:100%;min-height:0;overflow-y:auto}
+.inspector-body{padding:12px}
+#selectedCallout{transform:translate(0,-50%);gap:0;max-width:none}
+#selectedCallout .label-dot{width:14px;height:14px;flex:0 0 14px;position:absolute;left:-7px;top:50%;transform:translateY(-50%);z-index:2}
+#selectedCallout .label-name{margin-left:24px;max-width:min(230px,36vw);white-space:normal;overflow-wrap:break-word}
+#selectedCallout.flip-left .label-name{margin-left:0;margin-right:24px;transform:translateX(-100%)}
+#selectedCallout.flip-up{transform:translateY(-100%)}
+#selectedCallout.flip-up .label-dot{top:100%}
+#expandViewer[aria-pressed=true]{background:#1e6870;border-color:#62decf}
+.lab-grid:fullscreen{background:#091623;padding:12px;display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,23vw,420px);width:100vw;height:100dvh;min-height:0;gap:12px}
+.lab-grid:fullscreen .model-panel,.lab-grid:fullscreen .inspector{height:100%}
+.lab-grid:fullscreen #sceneRoot{height:100%;min-height:0}
+@media(max-height:760px) and (min-width:1021px){
+ .topbar{padding:5px 20px}.topbar h1{font-size:20px}
+ .region-head span,.camera-workspace .microhelp{display:none}
+ .lab-grid{height:clamp(300px,calc(100dvh - 255px),950px)}
+ .page{padding-bottom:10px}
+}
+@media(max-width:1020px){
+ #app{grid-template-columns:1fr}
+ #app>.sidebar{height:auto;max-height:85px;overflow-x:auto;flex-wrap:nowrap;padding:7px 12px}
+ #app>main{height:calc(100dvh - 85px)}
+ .lab-grid{height:auto;min-height:0;grid-template-columns:1fr}
+ #sceneRoot{height:clamp(350px,50dvh,650px)}
+ .inspector{height:auto;max-height:40dvh}
+}
+@media(max-width:620px){
+ .topbar,.page{padding-left:10px;padding-right:10px}
+ .explode-control{min-width:0;width:100%}
+ .region-picker label{min-width:120px}
+ .lab-grid:fullscreen{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) 25vh}
+}
