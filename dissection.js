@@ -5,7 +5,7 @@ export function installDissection(viewer,notify) {
   const originalSet=viewer.setSystem.bind(viewer);
   const homes=new Map(),centers=new Map();
   let anchor=null,height=1,drag=null;
-  viewer.explodeAmount=0;viewer.explodeScope="selected";viewer.grabMode=false;viewer.highContrast=false;
+  viewer.explodeAmount=0;viewer.explodeScope="whole";viewer.grabMode=false;viewer.highContrast=false;
   const canvas=viewer.renderer.domElement;
   viewer.renderer.toneMapping=THREE.ACESFilmicToneMapping;
   viewer.renderer.toneMappingExposure=1.15;
@@ -40,7 +40,25 @@ export function installDissection(viewer,notify) {
   function shift(e){
     const result=e.pullOffset?e.pullOffset.clone():new THREE.Vector3();
     if(viewer.explodeAmount<=0)return result;
-    if(viewer.explodeScope==="selected"){
+    if(viewer.explodeScope==="whole"){
+      const center=centers.get(e.key);
+      if(!center||!anchor)return result;
+      // Keep relationships understandable: a controlled outward separation
+      // based on the original anatomy, at <=6% of the body's height.
+      const relative=center.clone().sub(anchor);
+      relative.y*=.42;
+      if(relative.lengthSq()<height*height*.0001){
+        let hash=0;for(const c of e.key)hash=(hash*33+c.charCodeAt(0))>>>0;
+        const angle=hash%6283/1000;
+        relative.set(Math.cos(angle),Math.sin(angle)*.4,Math.sin(angle));
+      }
+      const radial=relative.normalize().multiplyScalar(viewer.explodeAmount*height*.055);
+      // Layers are slightly offset in depth while their overall shapes remain recognizable.
+      const order=["Skeleton","Joints","Muscular","Cardiovascular","Lymphatic","Nervous","Visceral"];
+      const index=Math.max(0,order.indexOf(e.system));
+      radial.z+=(index-3)*viewer.explodeAmount*height*.012;
+      result.add(radial);
+    }else if(viewer.explodeScope==="selected"){
       if(e.key!==viewer.selected)return result;
       const size=dimensions(e);
       // Move the chosen structure laterally into an inspection zone, without
@@ -88,17 +106,20 @@ export function installDissection(viewer,notify) {
   viewer.setSystem=async(...args)=>{await originalSet(...args);prepare();viewer.apply()};
   prepare();viewer.apply();
   viewer.setExplosion=value=>{
-   const amount=Math.max(0,Math.min(1,Number(value)||0));
-   if(amount>0&&viewer.explodeScope==="selected"&&!viewer.selected){
-     notify("Select the anatomical structure you want to separate first.");return false
-   }
-   if(amount>0&&viewer.explodeScope==="region"&&(!viewer.regionFilter||viewer.activeRegion==="whole")){
-     notify("Choose Skull, Wrist, or another body region before separating its parts.");return false
-   }
-   viewer.explodeAmount=amount;viewer.apply();return true
+  const amount=Math.max(0,Math.min(1,Number(value)||0));
+  if(amount>0&&viewer.explodeScope==="selected"&&!viewer.selected){
+    notify("Choose a specific anatomical structure first, or select Whole body as the dissection scope.");
+    return false
+  }
+  if(amount>0&&viewer.explodeScope==="region"&&(!viewer.regionFilter||viewer.activeRegion==="whole")){
+    // Whole body is a valid, intentional dissection scope, not an error.
+    viewer.explodeScope="whole";
+    document.getElementById("explodeScope").value="whole";
+  }
+  viewer.explodeAmount=amount;viewer.apply();return true
  };
  viewer.setExplodeScope=scope=>{
-   viewer.explodeScope=scope==="region"?"region":"selected";
+   viewer.explodeScope=["whole","region","selected"].includes(scope)?scope:"whole";
    viewer.explodeAmount=0;viewer.apply()
  };
   viewer.pullSelected=()=>{const e=viewer.registry.get(viewer.selected);if(!e)return false;e.pullOffset=e.pullOffset||new THREE.Vector3();const right=new THREE.Vector3().setFromMatrixColumn(viewer.camera.matrixWorld,0);e.pullOffset.addScaledVector(right,dimensions(e)*.30);viewer.apply();return true};
@@ -151,14 +172,19 @@ export function installDissection(viewer,notify) {
     });
   };
   $("explodeScope").onchange=async e=>{
-   const scope=e.target.value;
-   viewer.setExplodeScope(scope);
-   $("explodeSlider").value=0;$("explodeValue").textContent="0%";
-   if(scope==="region"&&viewer.activeRegion==="whole"){
-     const auto=await viewer.openSelectedRegion?.();
-     if(!auto)notify("To separate a body region, choose Skull, Wrist, or another area in Body Region. You can also select a named bone, then choose Selected body region.")
-   }
- };
+    const scope=e.target.value;
+    viewer.setExplodeScope(scope);
+    $("explodeSlider").value=0;$("explodeValue").textContent="0%";
+    if(scope==="region"&&viewer.activeRegion==="whole"){
+      const auto=await viewer.openSelectedRegion?.();
+      if(!auto){
+        // No local region chosen: disassemble the visible whole-body anatomy.
+        viewer.setExplodeScope("whole");
+        e.target.value="whole";
+        notify("Whole-body separation is ready. Drag the Dissect / Separate slider to spread the anatomy.")
+      }
+    }
+  };
   $("pullSelected").onclick=()=>{if(!viewer.pullSelected())notify("Select a structure first.")};
   $("resetSelected").onclick=()=>{if(!viewer.returnSelected())notify("Select a structure to restore its position.")};
   $("reassemble").onclick=()=>{viewer.reassemble();$("explodeSlider").value=0;$("explodeValue").textContent="0%"};
