@@ -6,7 +6,7 @@ let lessonSession=null;
 let viewer,study=[],lessons=[],active=0,quiz=[],qi=0,score=0,meshExam=null;let progress={studied:[],notes:{},scores:[]};
 try{progress={...progress,...JSON.parse(localStorage.getItem("atlasLabV2")||"{}")}}catch{}
 const save=()=>{try{localStorage.setItem("atlasLabV2",JSON.stringify(progress))}catch{}};
-function show(page){document.querySelectorAll(".page").forEach(e=>e.classList.toggle("active",e.id==="page-"+page));document.querySelectorAll(".nav").forEach(e=>e.classList.toggle("active",e.dataset.page===page));$("pageHeading").textContent={lab:"Virtual Dissection Lab",lessons:"Guided Lessons",cards:"Anatomy Library",quiz:"Practice Exam",progress:"My Progress",sources:"Sources & Accuracy"}[page]||"Atlas Lab";if(page==="progress")renderProgress();if(page==="lab")viewer?.resize()}
+function show(page){document.querySelectorAll(".page").forEach(e=>e.classList.toggle("active",e.id==="page-"+page));document.querySelectorAll(".nav").forEach(e=>e.classList.toggle("active",e.dataset.page===page));$("pageHeading").textContent={lab:"Virtual Dissection Lab",lessons:"Guided Lessons",cards:"Anatomy Library",quiz:"Practice Exam",progress:"My Progress",sources:"Sources & Accuracy"}[page]||"Atlas Lab";if(page==="progress")renderProgress();if(page==="lab"){viewer?.resize();requestAnimationFrame(fitWorkspace)}}
 document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>show(b.dataset.page));
 function status(message,error=false){$("modelStatus").textContent=message;$("source-status").textContent=message;if(error)$("installNotice").hidden=false}
 function sync(){if(!viewer)return;const all=[...viewer.registry.values()];$("countChip").textContent=all.length.toLocaleString()+" structures loaded";$("shownCount").textContent=viewer.visibleEntries().length+" visible";
@@ -48,6 +48,31 @@ $("zoomIn").onclick=()=>viewer?.zoom(.72);$("zoomOut").onclick=()=>viewer?.zoom(
 $("panLeft").onclick=()=>viewer?.pan(105,0);$("panRight").onclick=()=>viewer?.pan(-105,0);
 $("panUp").onclick=()=>viewer?.pan(0,-105);$("panDown").onclick=()=>viewer?.pan(0,105);
 $("focusSelection").onclick=()=>{const e=viewer?.registry.get(viewer.selected);if(e)viewer.focus(e);else status("Select a structure, or choose a region to focus on.")};
+function fitWorkspace(){
+ if(document.fullscreenElement)return;
+ const grid=$("page-lab").querySelector(".lab-grid"),main=document.querySelector("#app>main");
+ if(!$("page-lab").classList.contains("active"))return;
+ const space=main.getBoundingClientRect().bottom-grid.getBoundingClientRect().top-14;
+ if(space>310){grid.style.height=Math.min(1100,Math.floor(space))+"px"}
+ else{grid.style.height="340px"}
+ viewer?.resize()
+}
+const fullscreenButton=$("expandViewer"),workspace=$("page-lab").querySelector(".lab-grid");
+fullscreenButton.onclick=async()=>{
+ try{if(document.fullscreenElement)await document.exitFullscreen();
+ else await workspace.requestFullscreen();}catch(err){status("Fullscreen unavailable in this browser: "+err.message)}
+};
+document.addEventListener("fullscreenchange",()=>{
+ fullscreenButton.setAttribute("aria-pressed",String(document.fullscreenElement===workspace));
+ fullscreenButton.textContent=document.fullscreenElement===workspace?"↙ Exit fullscreen":"⛶ Fullscreen lab";
+ requestAnimationFrame(()=>viewer?.resize());
+});
+window.addEventListener("resize",()=>requestAnimationFrame(fitWorkspace));
+window.addEventListener("keydown",e=>{
+ if(e.key.toLowerCase()==="f"&&!["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)&&$("page-lab").classList.contains("active")){
+   e.preventDefault();fullscreenButton.click()
+ }
+});
 function renderLessons(){
   const menu=$("lessonMenu"),detail=$("lessonDetail");menu.innerHTML="";
   lessons.forEach((l,i)=>{const button=document.createElement("button");button.textContent=(i+1)+". "+l.title;button.onclick=()=>{active=i;renderLessons()};if(active===i)button.classList.add("active");menu.append(button)});
@@ -117,6 +142,7 @@ $("exportBtn").onclick=()=>{const a=document.createElement("a"),url=URL.createOb
 $("importFile").onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text());if(!Array.isArray(data.studied)||!data.notes)throw Error("Invalid progress file");progress=data;save();renderProgress()}catch(err){alert(err.message)}};
 $("clearProgress").onclick=()=>{if(confirm("Reset saved study progress?")){progress={studied:[],notes:{},scores:[]};save();renderProgress()}};
 async function init(){try{[study,lessons]=await Promise.all([fetch("study_cards.json").then(r=>r.json()),fetch("lessons.json").then(r=>r.json())]);renderLessons();renderCards();const manifest=await fetch("asset_manifest.json").then(r=>r.json());viewer=new AnatomyViewer($("sceneRoot"),sync,status);sync();await viewer.configure(manifest);installDissection(viewer,status);installRegions(viewer,status);
+ requestAnimationFrame(fitWorkspace);
  viewer.renderer.domElement.addEventListener("dblclick",e=>{viewer.pick(e);const selected=viewer.registry.get(viewer.selected);if(selected)viewer.focus(selected)});
  sync()}catch(e){status("App initialization error: "+e.message,true);console.error(e)}}
 init();
