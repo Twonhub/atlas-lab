@@ -48,7 +48,7 @@ export class AnatomyViewer {
    const delta=right.multiplyScalar(dx*units).addScaledVector(up,dy*units);
    this.camera.position.add(delta);this.controls.target.add(delta);this.controls.update()
  }
- updateClipping(){const d=this.camera.position.distanceTo(this.controls.target);this.camera.near=Math.max(.0000001,d/100000);this.camera.far=Math.max(100,d*10000);this.camera.updateProjectionMatrix()}
+ updateClipping(){const d=this.camera.position.distanceTo(this.controls.target);this.camera.near=Math.max(.0000001,d/10000);this.camera.far=Math.max(1,d*1500);this.camera.updateProjectionMatrix()}
  async configure(manifest){this.manifest=manifest;await this.setSystem("Skeleton",true)}
  systems(){return Object.keys(this.manifest)}
  async setSystem(sys,on){if(on)this.enabled.add(sys);else this.enabled.delete(sys);
@@ -65,7 +65,7 @@ export class AnatomyViewer {
   if(visible&&(x.key===this.selected||x.ghost)){const arr=(Array.isArray(orig)?orig:[orig]).map(o=>{const c=o.clone();if(x.ghost){c.transparent=true;c.opacity=.18;c.depthWrite=false}if(x.key===this.selected){c.emissive=new THREE.Color("#1fbbaa");c.emissiveIntensity=.5}return c});m.material=Array.isArray(orig)?arr:arr[0]}else m.material=orig;}}
   this.changed(this)}
  visibleEntries(){return [...this.registry.values()].filter(x=>this.enabled.has(x.system)&&!x.hidden&&(!this.isolated||this.isolated===x.key))}
- pick(e){const b=this.renderer.domElement.getBoundingClientRect(),p=new THREE.Vector2((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);this.raycaster.setFromCamera(p,this.camera);const a=this.raycaster.intersectObjects([...this.registry.values()].flatMap(x=>x.meshes).filter(x=>x.visible));if(a.length)this.select(a[0].object.userData.atlasKey,true);else this.select(null)}
+ pick(e){const b=this.renderer.domElement.getBoundingClientRect(),p=new THREE.Vector2((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);this.raycaster.setFromCamera(p,this.camera);const a=this.raycaster.intersectObjects([...this.registry.values()].flatMap(x=>x.meshes).filter(x=>x.visible));this.pickedFromCanvas=true;try{if(a.length)this.select(a[0].object.userData.atlasKey,true);else this.select(null)}finally{this.pickedFromCanvas=false}}
  select(key,toggle=false){const next=toggle&&this.selected===key?null:key;this.selected=next;this.apply();this.onRegionSelectionChanged?.()}
  snapshot(){this.history.push({selected:this.selected,isolated:this.isolated,enabled:[...this.enabled],data:[...this.registry.values()].filter(e=>e.hidden||e.ghost).map(e=>[e.key,e.hidden,e.ghost])});if(this.history.length>30)this.history.shift()}
  undo(){const x=this.history.pop();if(!x)return;this.selected=x.selected;this.isolated=x.isolated;this.enabled=new Set(x.enabled);for(const e of this.registry.values()){e.hidden=false;e.ghost=false}for(const [k,h,g]of x.data){const e=this.registry.get(k);if(e){e.hidden=h;e.ghost=g}}this.apply()}
