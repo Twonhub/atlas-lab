@@ -1,4 +1,5 @@
 import {installDissection} from "./dissection.js";
+import {anatomyInfo,matchCard} from "./anatomy_info.js";
 import {installRegions} from "./regions.js";
 import {AnatomyViewer} from "./viewer.js";
 const $=id=>document.getElementById(id);
@@ -29,25 +30,44 @@ function sync(){if(!viewer)return;const all=[...viewer.registry.values()];$("cou
      status((ok?"Correct. ":"Not quite. ")+ "Identification "+(meshExam.index+1)+"/"+meshExam.targets.length+": click "+next.name+" ("+next.system+") on the actual 3D model.");
    }
  }
- if(selected){$("selectedSystem").textContent=selected.system;$("selectedName").textContent=selected.name;$("notes").value=progress.notes[selected.key]||"";$("markStudied").textContent=progress.studied.includes(selected.key)?"✓ Studied":"＋ Mark as studied";
-  const card=study.find(c=>c.system===selected.system&&(c.name.toLowerCase()===selected.name.toLowerCase()||selected.name.toLowerCase().startsWith(c.name.toLowerCase()+" ")));
+ if(selected){
+  $("selectedSystem").textContent=selected.system;
+  $("selectedName").textContent=selected.name;
+  $("notes").value=progress.notes[selected.key]||"";
+  $("markStudied").textContent=progress.studied.includes(selected.key)?"✓ Studied":"＋ Mark as studied";
+  const info=anatomyInfo(selected.name,selected.system,study);
   const detail=$("selectedExtras");detail.replaceChildren();
-  const suffix=selected.name.toLowerCase();
-  const side=suffix.endsWith(".l")?"Left anatomical side":suffix.endsWith(".r")?"Right anatomical side":"Midline / unpaired / not indicated";
+  const side=/\.l$/i.test(selected.name)?"Left":/\.r$/i.test(selected.name)?"Right":"Side unspecified";
   const meta=document.createElement("p");meta.className="selected-meta";
-  meta.textContent="SOURCE STRUCTURE · "+selected.system.toUpperCase()+" · "+side;
-  detail.append(meta);
-  const summary=document.createElement("p");
-  summary.textContent=card?card.fact:"The atlas supplies the mesh name and geometry; this structure has not been assigned an independently verified description.";
-  detail.append(summary);
-  if(card?.source){const a=document.createElement("a");a.href=card.source;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Read anatomy textbook reference ↗";detail.append(a)}
-  const caveat=document.createElement("p");caveat.className="muted small";caveat.textContent="Highlighted mesh and pinned label identify the source-model structure. Individual mesh labels are not independently medically audited.";detail.append(caveat);
+  meta.textContent=selected.system.toUpperCase()+" · "+side+" · "+(info.curated?"Reference-linked entry":"General category guidance");
+  const description=document.createElement("p");description.className="inspector-description";description.textContent=info.short;
+  const purpose=document.createElement("p");purpose.className="inspector-purpose";purpose.textContent="FUNCTION · "+info.purpose;
+  detail.append(meta,description,purpose);
+  const linked=document.createElement("button");linked.className="btn sm";
+  linked.textContent=info.curated?"Read full anatomy entry →":"Browse anatomy library →";
+  linked.onclick=()=>{
+    show("cards");const match=matchCard(selected.name,selected.system,study);
+    if(match){$("studySearch").value=match.name;$("studyFilter").value=match.system;renderCards();renderCardDetail(match)}
+  };
+  detail.append(linked);
+  if(info.source){const a=document.createElement("a");a.href=info.source;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Textbook reference ↗";detail.append(a)}
  }
  document.querySelectorAll("[data-study-id]").forEach(b=>{const card=study.find(c=>c.id===b.dataset.studyId);const e=card&&viewer.find(card.name,card.system);b.classList.toggle("active",!!(e&&e.key===viewer.selected))});
  $("layerList").innerHTML="";for(const s of viewer.systems()){let b=document.createElement("button");b.textContent=(viewer.enabled.has(s)?"☑ ":"□ ")+s;b.onclick=()=>viewer.activeRegion&&viewer.activeRegion!=="whole"?viewer.navigateRegion(viewer.activeRegion,s):viewer.setSystem(s,!viewer.enabled.has(s));$("layerList").append(b)}
 }
 for(const [id,action] of [["hideSelected","hide"],["isolateSelected","isolate"],["ghostSelected","ghost"],["focusSelected","focus"],["showAll","showAll"]])$(id).onclick=()=>viewer?.act(action);
-$("viewFront").onclick=()=>viewer?.view("front");$("viewBack").onclick=()=>viewer?.view("back");$("viewSide").onclick=()=>viewer?.view("side");$("viewReset").onclick=()=>viewer?.fitAll();$("undo").onclick=()=>viewer?.undo();$("unselect").onclick=()=>viewer?.select(null);
+$("viewReset").onclick=()=>viewer?.fitAll();
+$("undo").onclick=()=>viewer?.undo();
+$("unselect").onclick=()=>viewer?.select(null);
+$("interactionTool").onchange=e=>{
+ if(!viewer)return;
+ const mode=viewer.setTool(e.target.value);
+ const messages={rotate:"Rotate mode: left drag to orbit. Wheel or two-finger trackpad gesture zooms toward the pointer.",
+  pan:"Pan mode: left drag to move the view. Wheel or pinch still zooms. Select Rotate to orbit again.",
+  pull:"Grab & Pull mode: drag a structure out for inspection. Choose Rotate or Pan when finished."};
+ $("navigationHelp").textContent=messages[mode];
+};
+$("viewPosition").onchange=e=>{if(viewer&&e.target.value){viewer.viewPreset(e.target.value);status("Camera position: "+e.target.selectedOptions[0].textContent+" (zoom and selected region preserved).")}};
 $("notes").oninput=()=>{if(viewer?.selected){progress.notes[viewer.selected]=$("notes").value;save()}};
 $("markStudied").onclick=()=>{if(!viewer?.selected)return;if(!progress.studied.includes(viewer.selected))progress.studied.push(viewer.selected);save();sync()};
 $("meshSearch").oninput=()=>{const q=$("meshSearch").value.trim(),list=$("searchResults");list.innerHTML="";if(q.length<2)return;for(const e of [...viewer.registry.values()].filter(e=>e.name.toLowerCase().includes(q.toLowerCase())).slice(0,25)){const b=document.createElement("button");b.textContent=e.name+" · "+e.system;b.onclick=()=>{viewer.enabled.add(e.system);if(viewer.regionFilter&&!viewer.regionFilter.has(e.key))viewer.clearRegion?.();viewer.select(e.key,true);if(viewer.selected)viewer.focus(e);$("meshSearch").value=e.name;list.innerHTML=""};list.append(b)}};
@@ -134,21 +154,60 @@ async function openHeart(){
  return ok;
 }
 $("heartShortcut").onclick=openHeart;
-function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;list.innerHTML="";const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&(c.name+" "+c.fact).toLowerCase().includes(q));for(const c of filtered){const b=document.createElement("button");b.textContent=c.name+" · "+c.system;b.dataset.studyId=c.id;b.classList.toggle("active",!!(viewer&&c.name!=="Heart"&&viewer.selected===viewer.find(c.name,c.system)?.key));b.onclick=async()=>{const d=$("cardDetail");d.innerHTML="";const h=document.createElement("h2");h.textContent=c.name;const p=document.createElement("p");p.textContent=c.fact;const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener";a.textContent="Reference ↗";const v=document.createElement("button");v.textContent=c.name==="Heart"?"Explore cardiac chambers in 3D":"View highlighted structure in 3D";v.onclick=async()=>{if(c.name==="Heart"){await openHeart();return}show("lab");const found=await viewer.findAndFocus(c.name,c.system);if(!found)status("No matching mesh located for "+c.name+" in loaded systems.");else status(found.entry.name+" selected and labeled on the 3D body.")};
- const unselect=document.createElement("button");unselect.textContent="Deselect structure";unselect.onclick=()=>{viewer.select(null);status("Anatomical structure deselected.")};
- d.append(h,p,a,document.createElement("hr"),v,unselect);
- if(viewer){
-  if(c.name==="Heart"&&c.system==="Cardiovascular"){await openHeart();return}
-  if(c.system==="Cardiovascular"&&["Right atrium","Left atrium","Right ventricle","Left ventricle"].includes(c.name)){
-    await openHeart();const entry=viewer.find(c.name,c.system);
-    if(entry){viewer.select(entry.key);viewer.focus(entry);status("Cardiac chamber selected: "+entry.name)}
-    else status("No exact cardiac chamber mesh found: "+c.name);
-    return
-  }
-  const already=viewer.find(c.name,c.system);
-   if(already){if(viewer.selected===already.key)viewer.select(null);else{viewer.enabled.add(c.system);already.hidden=false;if(viewer.regionFilter&&!viewer.regionFilter.has(already.key))viewer.clearRegion?.();viewer.select(already.key)}}
-   else await viewer.setSystem(c.system,true).then(()=>{const entry=viewer.find(c.name,c.system);if(entry){viewer.select(entry.key)}else status("No matching source mesh located for "+c.name+".",false)});
- }};list.append(b)}}
+function makeInfoSection(title,value){
+ const wrap=document.createElement("section");wrap.className="anatomy-section";
+ const h=document.createElement("h3");h.textContent=title;
+ const p=document.createElement("p");p.textContent=value;
+ wrap.append(h,p);return wrap
+}
+let librarySelectedId=null;
+function renderCardDetail(c){
+ librarySelectedId=c.id;
+ const d=$("cardDetail");d.replaceChildren();
+ document.querySelectorAll("#studyList [data-study-id]").forEach(b=>b.classList.toggle("active",b.dataset.studyId===c.id));
+ const head=document.createElement("div");head.className="library-detail-head";
+ const h=document.createElement("h2");h.textContent=c.name;
+ const sub=document.createElement("div");sub.className="library-breadcrumb";sub.textContent=c.system+" / "+(c.region||"Anatomy");
+ head.append(h,sub);
+ d.append(head,
+  makeInfoSection("What it is",c.description||c.fact),
+  makeInfoSection("What it does",c.function||c.fact),
+  makeInfoSection("Adjacent structures & relationships",c.relationships||"Refer to the cited chapter."),
+  makeInfoSection("What to look for in 3D",c.study_tip||"Observe its anatomical orientation and neighboring structures."));
+ const foot=document.createElement("div");foot.className="library-detail-actions";
+ const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Read source textbook ↗";
+ const v=document.createElement("button");v.className="btn primary";v.textContent=c.name==="Heart"?"Explore heart chambers":"Locate in 3D →";
+ v.onclick=async()=>{
+  if(!viewer){status("3D viewer is loading.");return}
+  if(c.name==="Heart"){await openHeart();return}
+  show("lab");
+  if(c.system==="Cardiovascular"){await viewer.setSystem(c.system,true)}
+  const found=await viewer.findAndFocus(c.name,c.system);
+  if(found){status(found.entry.name+" is highlighted on the 3D body.")}
+  else status("This textbook entry has no individually selectable match in the current source mesh. Try related structures or system search.")
+ };
+ const clear=document.createElement("button");clear.className="btn";clear.textContent="Deselect 3D part";
+ clear.onclick=()=>viewer?.select(null);
+ foot.append(v,clear,a);d.append(foot);
+ const badge=document.createElement("p");badge.className="study-provenance";
+ badge.textContent="Reference-linked educational explanation. Not independently clinically reviewed; source mesh nomenclature may differ.";
+ d.append(badge)
+}
+function renderCards(){
+ const list=$("studyList"),q=$("studySearch").value.trim().toLowerCase(),filter=$("studyFilter").value;
+ list.replaceChildren();
+ const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&[c.name,c.region,c.fact,c.function,c.description,c.relationships].join(" ").toLowerCase().includes(q))
+  .sort((a,b)=>a.system.localeCompare(b.system)||a.region.localeCompare(b.region)||a.name.localeCompare(b.name));
+ const counter=document.createElement("p");counter.className="library-results";counter.textContent=filtered.length+" detailed anatomy entries";
+ list.append(counter);
+ for(const c of filtered){
+   const b=document.createElement("button");b.dataset.studyId=c.id;b.type="button";b.className="library-entry";
+   b.textContent=c.name+" · "+c.region;b.classList.toggle("active",c.id===librarySelectedId);
+   b.onclick=()=>renderCardDetail(c);list.append(b)
+ }
+ if(filtered.length&&!filtered.some(c=>c.id===librarySelectedId))renderCardDetail(filtered[0]);
+ if(!filtered.length){$("cardDetail").textContent="No matching curated entry. Search for another structure or select anatomy in the 3D viewer for general category guidance."}
+}
 $("studySearch").oninput=renderCards;$("studyFilter").onchange=renderCards;
 $("startTextQuiz").onclick=()=>{quiz=[...study].sort(()=>Math.random()-.5).slice(0,Math.min(10,study.length));qi=0;score=0;renderQuestion()};
 function renderQuestion(){const box=$("quizArea");box.innerHTML="";if(qi>=quiz.length){const h=document.createElement("h2");h.textContent="Score: "+score+"/"+quiz.length;box.append(h);progress.scores.push({date:new Date().toISOString(),score,total:quiz.length});save();return}const c=quiz[qi],h=document.createElement("h3");h.textContent="Which description matches "+c.name+"? ("+(qi+1)+"/"+quiz.length+")";box.append(h);const choices=[c,...study.filter(x=>x.id!==c.id).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);for(const x of choices){let b=document.createElement("button");b.style.display="block";b.style.margin="9px 0";b.textContent=x.fact;b.onclick=()=>{if(x.id===c.id)score++;qi++;renderQuestion()};box.append(b)}}
@@ -169,6 +228,7 @@ $("exportBtn").onclick=()=>{const a=document.createElement("a"),url=URL.createOb
 $("importFile").onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text());if(!Array.isArray(data.studied)||!data.notes)throw Error("Invalid progress file");progress=data;save();renderProgress()}catch(err){alert(err.message)}};
 $("clearProgress").onclick=()=>{if(confirm("Reset saved study progress?")){progress={studied:[],notes:{},scores:[]};save();renderProgress()}};
 async function init(){try{[study,lessons]=await Promise.all([fetch("study_cards.json").then(r=>r.json()),fetch("lessons.json").then(r=>r.json())]);renderLessons();renderCards();const manifest=await fetch("asset_manifest.json").then(r=>r.json());viewer=new AnatomyViewer($("sceneRoot"),sync,status);sync();await viewer.configure(manifest);installDissection(viewer,status);installRegions(viewer,status);
+ viewer.setTool($("interactionTool").value);
  requestAnimationFrame(fitWorkspace);
  viewer.renderer.domElement.addEventListener("dblclick",e=>{viewer.pick(e);const selected=viewer.registry.get(viewer.selected);if(selected)viewer.focus(selected)});
  sync()}catch(e){status("App initialization error: "+e.message,true);console.error(e)}}
