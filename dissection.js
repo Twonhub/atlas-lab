@@ -5,7 +5,7 @@ export function installDissection(viewer,notify) {
   const originalSet=viewer.setSystem.bind(viewer);
   const homes=new Map(),centers=new Map();
   let anchor=null,height=1,drag=null;
-  viewer.explodeAmount=0; viewer.grabMode=false;viewer.highContrast=false;
+  viewer.explodeAmount=0;viewer.explodeScope="selected";viewer.grabMode=false;viewer.highContrast=false;
   const canvas=viewer.renderer.domElement;
   viewer.renderer.toneMapping=THREE.ACESFilmicToneMapping;
   viewer.renderer.toneMappingExposure=1.15;
@@ -24,14 +24,42 @@ export function installDissection(viewer,notify) {
       if(!b.isEmpty()){anchor=b.getCenter(new THREE.Vector3());height=Math.max(.01,b.getSize(new THREE.Vector3()).y)}
     }
   }
+  function dimensions(e){
+    const box=new THREE.Box3();
+    for(const m of e.meshes)box.expandByObject(m);
+    return Math.max(box.getSize(new THREE.Vector3()).length(),height*.008);
+  }
+  function currentRegion(){
+    const members=[...viewer.registry.values()].filter(e=>viewer.regionFilter?.has(e.key)&&viewer.enabled.has(e.system));
+    if(!members.length)return null;
+    const bb=new THREE.Box3();for(const e of members){const pos=centers.get(e.key);if(pos)bb.expandByPoint(pos)}
+    if(bb.isEmpty())return null;
+    return {members,center:bb.getCenter(new THREE.Vector3()),extent:Math.max(bb.getSize(new THREE.Vector3()).length(),height*.08)};
+  }
   function shift(e){
-    const result=new THREE.Vector3();
-    if(anchor&&centers.has(e.key)){
-      const v=centers.get(e.key).clone().sub(anchor);v.y*=.12;
-      if(v.lengthSq()<height*height*.001){let h=0;for(const c of e.key)h=(h*33+c.charCodeAt(0))>>>0;const a=h%6283/1000;v.set(Math.cos(a),.12,Math.sin(a))}
-      result.add(v.normalize().multiplyScalar(viewer.explodeAmount*height*.27));
+    const result=e.pullOffset?e.pullOffset.clone():new THREE.Vector3();
+    if(viewer.explodeAmount<=0)return result;
+    if(viewer.explodeScope==="selected"){
+      if(e.key!==viewer.selected)return result;
+      const size=dimensions(e);
+      // Move the chosen structure laterally into an inspection zone, without
+      // disturbing its neighboring bones, muscles, vessels or organs.
+      const right=new THREE.Vector3().setFromMatrixColumn(viewer.camera.matrixWorld,0);
+      result.addScaledVector(right,viewer.explodeAmount*size*.55);
+    }else if(viewer.explodeScope==="region"){
+      if(!viewer.regionFilter?.has(e.key))return result;
+      const data=currentRegion();if(!data)return result;
+      const center=centers.get(e.key);if(!center)return result;
+      const dir=center.clone().sub(data.center);
+      // Preserve anatomical relationships: move only parts inside the chosen
+      // region and scale displacement to that region, not the whole skeleton.
+      if(dir.lengthSq()<data.extent*data.extent*.00005){
+        let h=0;for(const ch of e.key)h=(h*31+ch.charCodeAt(0))>>>0;
+        const theta=(h%360)*Math.PI/180;dir.set(Math.cos(theta),Math.sin(theta),Math.sin(theta*.7));
+      }
+      dir.normalize();
+      result.addScaledVector(dir,viewer.explodeAmount*data.extent*.32);
     }
-    if(e.pullOffset)result.add(e.pullOffset);
     return result;
   }
   function move(e){const offset=shift(e);for(const m of e.meshes){const p=homes.get(m);if(p)m.position.copy(p).add(offset)}}
@@ -57,8 +85,21 @@ export function installDissection(viewer,notify) {
   };
   viewer.setSystem=async(...args)=>{await originalSet(...args);prepare();viewer.apply()};
   prepare();viewer.apply();
-  viewer.setExplosion=value=>{viewer.explodeAmount=Math.max(0,Math.min(1,Number(value)||0));viewer.apply()};
-  viewer.pullSelected=()=>{const e=viewer.registry.get(viewer.selected);if(!e)return false;e.pullOffset=e.pullOffset||new THREE.Vector3();const right=new THREE.Vector3().setFromMatrixColumn(viewer.camera.matrixWorld,0);e.pullOffset.addScaledVector(right,height*.22);viewer.apply();return true};
+  viewer.setExplosion=value=>{
+   const amount=Math.max(0,Math.min(1,Number(value)||0));
+   if(amount>0&&viewer.explodeScope==="selected"&&!viewer.selected){
+     notify("Select the anatomical structure you want to separate first.");return false
+   }
+   if(amount>0&&viewer.explodeScope==="region"&&(!viewer.regionFilter||viewer.activeRegion==="whole")){
+     notify("Choose Skull, Wrist, or another body region before separating its parts.");return false
+   }
+   viewer.explodeAmount=amount;viewer.apply();return true
+ };
+ viewer.setExplodeScope=scope=>{
+   viewer.explodeScope=scope==="region"?"region":"selected";
+   viewer.explodeAmount=0;viewer.apply()
+ };
+  viewer.pullSelected=()=>{const e=viewer.registry.get(viewer.selected);if(!e)return false;e.pullOffset=e.pullOffset||new THREE.Vector3();const right=new THREE.Vector3().setFromMatrixColumn(viewer.camera.matrixWorld,0);e.pullOffset.addScaledVector(right,dimensions(e)*.30);viewer.apply();return true};
   viewer.returnSelected=()=>{const e=viewer.registry.get(viewer.selected);if(!e)return false;e.pullOffset=new THREE.Vector3();viewer.apply();return true};
   viewer.reassemble=()=>{viewer.explodeAmount=0;viewer.isolated=null;for(const e of viewer.registry.values()){e.hidden=false;e.ghost=false;e.pullOffset=new THREE.Vector3()}viewer.apply();viewer.fitAll()};
   function endDrag(){drag=null;viewer.controls.enabled=true;canvas.style.cursor=viewer.grabMode?"grab":"auto"}
@@ -99,7 +140,15 @@ export function installDissection(viewer,notify) {
     viewer.enabled.add(system);entry.hidden=false;viewer.isolated=null;viewer.select(entry.key);viewer.focus(entry);return entry;
   };
   const $=id=>document.getElementById(id);let frame=0;
-  $("explodeSlider").oninput=e=>{const value=Number(e.target.value);$("explodeValue").textContent=value+"%";cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>viewer.setExplosion(value/100))};
+  $("explodeSlider").oninput=e=>{
+    const value=Number(e.target.value);
+    cancelAnimationFrame(frame);
+    frame=requestAnimationFrame(()=>{
+      if(viewer.setExplosion(value/100))$("explodeValue").textContent=value+"%";
+      else{e.target.value=0;$("explodeValue").textContent="0%"}
+    });
+  };
+  $("explodeScope").onchange=e=>{viewer.setExplodeScope(e.target.value);$("explodeSlider").value=0;$("explodeValue").textContent="0%"};
   $("pullMode").onclick=()=>{viewer.setGrabMode(!viewer.grabMode);$("pullMode").setAttribute("aria-pressed",String(viewer.grabMode));$("pullMode").textContent="✥ Grab & pull: "+(viewer.grabMode?"On":"Off")};
   $("pullSelected").onclick=()=>{if(!viewer.pullSelected())notify("Select a structure first.")};
   $("resetSelected").onclick=()=>{if(!viewer.returnSelected())notify("Select a structure to restore its position.")};
