@@ -52,7 +52,8 @@ function sync(){if(!viewer)return;const all=[...viewer.registry.values()];$("cou
   detail.append(linked);
   if(info.source){const a=document.createElement("a");a.href=info.source;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Textbook reference ↗";detail.append(a)}
  }
- document.querySelectorAll("[data-study-id]").forEach(b=>{const card=study.find(c=>c.id===b.dataset.studyId);const e=card&&viewer.find(card.name,card.system);b.classList.toggle("active",!!(e&&e.key===viewer.selected))});
+ const currentCard=selected&&matchCard(selected.name,selected.system,study);
+ document.querySelectorAll("[data-study-id]").forEach(b=>b.classList.toggle("active",!!(currentCard&&currentCard.id===b.dataset.studyId)));
  $("layerList").innerHTML="";for(const s of viewer.systems()){let b=document.createElement("button");b.textContent=(viewer.enabled.has(s)?"☑ ":"□ ")+s;b.onclick=()=>viewer.activeRegion&&viewer.activeRegion!=="whole"?viewer.navigateRegion(viewer.activeRegion,s):viewer.setSystem(s,!viewer.enabled.has(s));$("layerList").append(b)}
 }
 for(const [id,action] of [["hideSelected","hide"],["isolateSelected","isolate"],["ghostSelected","ghost"],["focusSelected","focus"],["showAll","showAll"]])$(id).onclick=()=>viewer?.act(action);
