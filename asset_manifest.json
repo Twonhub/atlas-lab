@@ -1,9 +1,9 @@
 {
-  "Skeleton": "https://cdn.jsdelivr.net/gh/nqwrc/3d-anatomy@master/public/models/skeletal.glb",
-  "Joints": "https://cdn.jsdelivr.net/gh/nqwrc/3d-anatomy@master/public/models/joints.glb",
-  "Muscular": "https://cdn.jsdelivr.net/gh/nqwrc/3d-anatomy@master/public/models/muscular.glb",
-  "Arterial": "https://cdn.jsdelivr.net/gh/nqwrc/3d-anatomy@master/public/models/arterial.glb",
-  "Venous": "https://cdn.jsdelivr.net/gh/nqwrc/3d-anatomy@master/public/models/venous.glb",
-  "Nervous": "https://cdn.jsdelivr.net/gh/nqwrc/3d-anatomy@master/public/models/nervous.glb",
-  "Visceral": "https://cdn.jsdelivr.net/gh/nqwrc/3d-anatomy@master/public/models/visceral.glb"
+  "Skeleton": "https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/skeletal.glb",
+  "Joints": "https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/joints.glb",
+  "Muscular": "https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/muscular.glb",
+  "Cardiovascular": "https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/cardiovascular.glb",
+  "Lymphatic": "https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/lymphatic.glb",
+  "Nervous": "https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/nervous.glb",
+  "Visceral": "https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/visceral.glb"
 }
