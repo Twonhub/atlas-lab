@@ -62,19 +62,33 @@ export class AnatomyViewer {
   this.callout.classList.toggle("flip-up",y>this.root.clientHeight-75);
   this.callout.querySelector(".label-name").textContent=entry.name+" · "+entry.system;
  }
- setPanMode(on){
-   this.panMode=!!on;
-   this.controls.mouseButtons.LEFT=on?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;
-   this.controls.touches.ONE=on?THREE.TOUCH.PAN:THREE.TOUCH.ROTATE;
-   this.renderer.domElement.style.cursor=on?"move":"grab";
+ enableUnifiedNavigation(){
+   this.tool="unified";this.panMode=false;
+   this.controls.enabled=true;this.controls.enableRotate=true;this.controls.enablePan=true;this.controls.enableZoom=true;
+   this.controls.mouseButtons={LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.PAN};
+   this.controls.touches={ONE:THREE.TOUCH.ROTATE,TWO:THREE.TOUCH.DOLLY_PAN};
+   this.controls.enableDamping=true;this.controls.dampingFactor=.095;
+   this.controls.rotateSpeed=.72;this.controls.panSpeed=1.05;this.controls.zoomSpeed=1.15;
+   this.controls.zoomToCursor=true;this.controls.screenSpacePanning=true;
+   this.renderer.domElement.style.cursor="grab";
+   this.renderer.domElement.tabIndex=0;
+   this.renderer.domElement.setAttribute("aria-label","Interactive 3D anatomy. Left drag rotates, right or Shift drag pans, wheel zooms, Option drag pulls anatomy.");
  }
- setTool(tool){
-   const mode=["rotate","pan","pull"].includes(tool)?tool:"rotate";
-   this.tool=mode;
-   this.setPanMode(mode==="pan");
-   if(typeof this.setGrabMode==="function")this.setGrabMode(mode==="pull");
-   this.renderer.domElement.style.cursor=mode==="pull"?"grab":mode==="pan"?"move":"grab";
-   return mode;
+ orbitKeyboard(horizontal,vertical){
+   const center=this.controls.target;
+   const offset=this.camera.position.clone().sub(center);
+   if(offset.lengthSq()<1e-12)return;
+   const up=this.camera.up.clone().normalize();
+   offset.applyAxisAngle(up,horizontal);
+   let right=new THREE.Vector3().crossVectors(up,offset).normalize();
+   if(right.lengthSq()<1e-10)right=new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld,0).normalize();
+   const rotated=offset.clone().applyAxisAngle(right,vertical);
+   const polar=rotated.clone().normalize().dot(up);
+   if(Math.abs(polar)<.995)offset.copy(rotated);
+   this.camera.position.copy(center).add(offset);
+   this.camera.lookAt(center);
+   this.controls.update();
+   this.updateClipping()
  }
  viewPreset(name){
    const presets={
