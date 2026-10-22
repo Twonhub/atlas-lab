@@ -11,7 +11,7 @@ document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>show(b.dataset.page))
 function status(message,error=false){$("modelStatus").textContent=message;$("source-status").textContent=message;if(error)$("installNotice").hidden=false}
 function sync(){if(!viewer)return;const all=[...viewer.registry.values()];$("countChip").textContent=all.length.toLocaleString()+" structures loaded";$("shownCount").textContent=viewer.visibleEntries().length+" visible";
  const selected=viewer.registry.get(viewer.selected);$("selectedEmpty").hidden=!!selected;$("selectedDetail").hidden=!selected;
- if(meshExam && selected && selected.key!==meshExam.lastAnswer){
+ if(meshExam && selected && viewer.pickedFromCanvas && selected.key!==meshExam.lastAnswer){
    const target=meshExam.targets[meshExam.index];
    const ok=selected.key===target.key;
    meshExam.lastAnswer=selected.key;
@@ -34,7 +34,7 @@ function sync(){if(!viewer)return;const all=[...viewer.registry.values()];$("cou
   $("selectedExtras").textContent=card?card.fact+" — Educational summary; use source reference for verification.":"Structure name from source 3D dataset; not independently clinically validated.";
  }
  document.querySelectorAll("[data-study-id]").forEach(b=>{const card=study.find(c=>c.id===b.dataset.studyId);const e=card&&viewer.find(card.name,card.system);b.classList.toggle("active",!!(e&&e.key===viewer.selected))});
- $("layerList").innerHTML="";for(const s of viewer.systems()){let b=document.createElement("button");b.textContent=(viewer.enabled.has(s)?"☑ ":"□ ")+s;b.onclick=()=>viewer.setSystem(s,!viewer.enabled.has(s));$("layerList").append(b)}
+ $("layerList").innerHTML="";for(const s of viewer.systems()){let b=document.createElement("button");b.textContent=(viewer.enabled.has(s)?"☑ ":"□ ")+s;b.onclick=()=>viewer.activeRegion&&viewer.activeRegion!=="whole"?viewer.navigateRegion(viewer.activeRegion,s):viewer.setSystem(s,!viewer.enabled.has(s));$("layerList").append(b)}
 }
 for(const [id,action] of [["hideSelected","hide"],["isolateSelected","isolate"],["ghostSelected","ghost"],["focusSelected","focus"],["showAll","showAll"]])$(id).onclick=()=>viewer?.act(action);
 $("viewFront").onclick=()=>viewer?.view("front");$("viewBack").onclick=()=>viewer?.view("back");$("viewSide").onclick=()=>viewer?.view("side");$("viewReset").onclick=()=>viewer?.fitAll();$("undo").onclick=()=>viewer?.undo();$("unselect").onclick=()=>viewer?.select(null);
@@ -90,8 +90,9 @@ $("lessonFind").onclick=()=>focusLessonStep();
 $("lessonNext").onclick=()=>{if(!lessonSession)return;const l=lessons[lessonSession.lesson];lessonSession.step=(lessonSession.step+1)%l.targets.length;focusLessonStep()};
 $("lessonHide").onclick=()=>{if(!viewer?.selected){updateLessonDock("Find a structure before hiding it.");return}viewer.act("hide");updateLessonDock("Structure hidden. Choose Next or Find target to continue.")};
 $("lessonExit").onclick=()=>{lessonSession=null;updateLessonDock()};
-function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;list.innerHTML="";const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&(c.name+" "+c.fact).toLowerCase().includes(q));for(const c of filtered){const b=document.createElement("button");b.textContent=c.name+" · "+c.system;b.dataset.studyId=c.id;b.classList.toggle("active",!!(viewer&&viewer.selected===viewer.find(c.name,c.system)?.key));b.onclick=async()=>{const d=$("cardDetail");d.innerHTML="";const h=document.createElement("h2");h.textContent=c.name;const p=document.createElement("p");p.textContent=c.fact;const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener";a.textContent="Reference ↗";const v=document.createElement("button");v.textContent="Select / deselect in 3D";v.onclick=async()=>{show("lab");const found=await viewer.findAndFocus(c.name,c.system,{toggle:true});if(!found)status("No matching mesh located for "+c.name+" in loaded systems.");else status(found.deselected?c.name+" deselected.":found.entry.name+" highlighted on the model.")};
- d.append(h,p,a,document.createElement("hr"),v);
+function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;list.innerHTML="";const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&(c.name+" "+c.fact).toLowerCase().includes(q));for(const c of filtered){const b=document.createElement("button");b.textContent=c.name+" · "+c.system;b.dataset.studyId=c.id;b.classList.toggle("active",!!(viewer&&viewer.selected===viewer.find(c.name,c.system)?.key));b.onclick=async()=>{const d=$("cardDetail");d.innerHTML="";const h=document.createElement("h2");h.textContent=c.name;const p=document.createElement("p");p.textContent=c.fact;const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener";a.textContent="Reference ↗";const v=document.createElement("button");v.textContent="View highlighted structure in 3D";v.onclick=async()=>{show("lab");const found=await viewer.findAndFocus(c.name,c.system);if(!found)status("No matching mesh located for "+c.name+" in loaded systems.");else status(found.entry.name+" selected and labeled on the 3D body.")};
+ const unselect=document.createElement("button");unselect.textContent="Deselect structure";unselect.onclick=()=>{viewer.select(null);status("Anatomical structure deselected.")};
+ d.append(h,p,a,document.createElement("hr"),v,unselect);
  if(viewer){const already=viewer.find(c.name,c.system);
    if(already){if(viewer.selected===already.key)viewer.select(null);else{viewer.enabled.add(c.system);already.hidden=false;if(viewer.regionFilter&&!viewer.regionFilter.has(already.key))viewer.clearRegion?.();viewer.select(already.key)}}
    else await viewer.setSystem(c.system,true).then(()=>{const entry=viewer.find(c.name,c.system);if(entry){viewer.select(entry.key)}else status("No matching source mesh located for "+c.name+".",false)});
