@@ -47,7 +47,7 @@ export function installRegions(viewer,notify) {
  viewer.refreshRegionList=()=>{if(viewer.activeRegion==="whole"){viewer.regionList=[];renderList();return}const system=sys.value;viewer.regionList=[...viewer.registry.values()].filter(e=>e.system===system&&viewer.regionFilter?.has(e.key)).sort((a,b)=>a.name.localeCompare(b.name));renderList()};
  const baseApply=viewer.apply.bind(viewer);
  viewer.apply=(...args)=>{baseApply(...args)};
- viewer.clearRegion=()=>{viewer.activeRegion="whole";viewer.regionFilter=null;viewer.regionList=[];select.value="whole";
+ viewer.clearRegion=()=>{viewer.activeRegion="whole";viewer.regionFilter=null;viewer.regionList=[];viewer.enabled.add("Skeleton");select.value="whole";
  if(viewer.setExplodeScope){viewer.setExplodeScope("whole");document.getElementById("explodeScope").value="whole";
   document.getElementById("explodeSlider").value=0;document.getElementById("explodeValue").textContent="0%"}
  info.textContent="Whole body • all visible anatomy. Use the Dissect / Separate slider to spread structures, or select an anatomical region for a close-up.";viewer.apply()};
