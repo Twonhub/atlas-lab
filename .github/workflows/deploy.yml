@@ -27,6 +27,7 @@ jobs:
           node --check viewer.js
           node --check dissection.js
           node --check regions.js
+          node --check anatomy_info.js
           python3 - <<'PYLESSONS'
           import json
           lessons=json.load(open('lessons.json'))
@@ -36,6 +37,13 @@ jobs:
           PYLESSONS
           python3 -m json.tool asset_manifest.json >/dev/null
           python3 -m json.tool study_cards.json >/dev/null
+          python3 - <<'PYCARDS'
+          import json
+          cards=json.load(open("study_cards.json"))
+          assert len(cards)>=65
+          assert all(all(c.get(k) for k in ("name","fact","function","description","relationships","study_tip","source")) for c in cards)
+          print("Validated",len(cards),"expanded anatomy entries")
+          PYCARDS
           python3 -m json.tool lessons.json >/dev/null
           mkdir -p _site/models
           base=https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models
@@ -55,7 +63,7 @@ jobs:
           curl -fL --retry 4 "${base}/License.txt" -o _site/models/License.txt
           curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/LICENSE -o _site/UPSTREAM_LICENSE.txt
           curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/NOTICE -o _site/UPSTREAM_NOTICE.txt
-          cp index.html app.js viewer.js dissection.js regions.js styles.css study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md MODEL_LICENSE_AND_ATTRIBUTION.md _site/
+          cp index.html app.js viewer.js dissection.js regions.js anatomy_info.js styles.css study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md MODEL_LICENSE_AND_ATTRIBUTION.md _site/
           touch _site/.nojekyll
           python3 - <<'PYMANIFEST'
           import json,pathlib
