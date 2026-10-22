@@ -124,7 +124,7 @@ export class AnatomyViewer {
   if(visible&&(x.key===this.selected||x.ghost)){const arr=(Array.isArray(orig)?orig:[orig]).map(o=>{const c=o.clone();if(x.ghost){c.transparent=true;c.opacity=.18;c.depthWrite=false}if(x.key===this.selected){c.emissive=new THREE.Color("#1fbbaa");c.emissiveIntensity=.5}return c});m.material=Array.isArray(orig)?arr:arr[0]}else m.material=orig;}}
   this.changed(this)}
  visibleEntries(){return [...this.registry.values()].filter(x=>this.enabled.has(x.system)&&!x.hidden&&(!this.isolated||this.isolated===x.key)&&(!this.regionFilter||this.regionFilter.has(x.key)))}
- pick(e){const b=this.renderer.domElement.getBoundingClientRect(),p=new THREE.Vector2((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);this.raycaster.setFromCamera(p,this.camera);const a=this.raycaster.intersectObjects([...this.registry.values()].flatMap(x=>x.meshes).filter(x=>x.visible),false);this.pickedFromCanvas=true;try{if(a.length)this.select(a[0].object.userData.atlasKey,true,a[0]);else this.select(null)}finally{this.pickedFromCanvas=false}}
+ pick(e,toggle=true){const b=this.renderer.domElement.getBoundingClientRect(),p=new THREE.Vector2((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);this.raycaster.setFromCamera(p,this.camera);const a=this.raycaster.intersectObjects([...this.registry.values()].flatMap(x=>x.meshes).filter(x=>x.visible),false);this.pickedFromCanvas=true;try{if(a.length)this.select(a[0].object.userData.atlasKey,toggle,a[0]);else this.select(null)}finally{this.pickedFromCanvas=false}}
  select(key,toggle=false,hit=null){
    const next=toggle&&this.selected===key?null:key;
    if(next!==this.selected||!next)this.labelHit=null;
