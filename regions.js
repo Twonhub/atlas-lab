@@ -11,7 +11,7 @@ export const REGIONS=[
  ["elbow","Elbow",["humerus","radius","ulna"]],
  ["forearm","Forearm",["radius","ulna"]],
  ["wrist","Wrist / carpals",["scaphoid","lunate","triquetrum","pisiform","trapezium","trapezoid","capitate","hamate"]],
- ["hand","Hand & fingers",["scaphoid","lunate","triquetrum","pisiform","trapezium","trapezoid","capitate","hamate","metacarp","phalange"]],
+ ["hand","Hand & fingers",["scaphoid","lunate","triquetrum","pisiform","trapezium","trapezoid","capitate","hamate","metacarp","phalange","phalanx"]],
  ["thorax","Chest & ribs",["sternum","rib","thoracic vertebra"]],
  ["abdomen","Abdomen",["lumbar vertebra"]],
  ["spine","Vertebral column",["vertebra","atlas","axis","sacrum","coccyx"]],
@@ -20,15 +20,15 @@ export const REGIONS=[
  ["knee","Knee",["patella","distal femur","proximal tibia"]],
  ["leg","Lower leg",["tibia","fibula"]],
  ["ankle","Ankle / tarsals",["talus","calcaneus","navicular","cuboid","cuneiform"]],
- ["foot","Foot & toes",["talus","calcaneus","navicular","cuboid","cuneiform","metatars","phalange"]]
+ ["foot","Foot & toes",["talus","calcaneus","navicular","cuboid","cuneiform","metatars","phalange","phalanx"]]
 ];
 const normalize=s=>String(s||"").toLowerCase().replace(/[_\-.]+/g," ").replace(/\s+/g," ").trim();
-const alias=(a,term)=>a===term||a.startsWith(term+" ")||a.endsWith(" "+term)||a.includes(" "+term+" ");
+const alias=(a,term)=>a===term||a.startsWith(term+" ")||a.endsWith(" "+term)||a.includes(" "+term+" ")||(term.length>=4&&a.includes(term));
 export function installRegions(viewer,notify) {
  viewer.activeRegion="whole";viewer.regionFilter=null;viewer.regionList=[];
  let pending=0;
  const select=document.getElementById("regionSelect"), sys=document.getElementById("regionSystem"), info=document.getElementById("regionInfo"), list=document.getElementById("regionMeshList");
- const clear=document.getElementById("regionClear");
+ const clear=document.getElementById("regionClear"),sideSelect=document.getElementById("regionSide");
  select.innerHTML="";for(const [id,title] of REGIONS){const option=document.createElement("option");option.value=id;option.textContent=title;select.append(option)}
  const populate=()=>{const current=sys.value;sys.innerHTML="";for(const name of viewer.systems()){const o=document.createElement("option");o.value=name;o.textContent=name==="Visceral"?"Organs":name;sys.append(o)}if([...sys.options].some(o=>o.value===current))sys.value=current};
  populate();
@@ -48,7 +48,7 @@ export function installRegions(viewer,notify) {
  viewer.apply=(...args)=>{baseApply(...args)};
  viewer.clearRegion=()=>{viewer.activeRegion="whole";viewer.regionFilter=null;viewer.regionList=[];select.value="whole";info.textContent="Whole body • all visible structures in selected systems";viewer.apply()};
  async function go(){
-   const token=++pending;const region=select.value,system=sys.value;
+   const token=++pending;const region=select.value,system=sys.value,side=sideSelect.value;
    if(region==="whole"){viewer.clearRegion();viewer.fitAll();return true}
    info.textContent="Locating "+select.selectedOptions[0].textContent+" in the source anatomy…";
    if(!viewer.groups.has("Skeleton"))await viewer.setSystem("Skeleton",true);
@@ -57,12 +57,27 @@ export function installRegions(viewer,notify) {
    const regionDef=REGIONS.find(r=>r[0]===region),terms=regionDef[2];
    const skeletal=[...viewer.registry.values()].filter(e=>e.system==="Skeleton");
    let matches=skeletal.filter(e=>terms.some(t=>alias(normalize(e.name),t)));
+   const lateral=new Set(["shoulder","upperarm","elbow","forearm","wrist","hand","pelvis","thigh","knee","leg","ankle","foot"]);
+   if(side!=="both"&&lateral.has(region)){
+     matches=matches.filter(e=>e.name.toLowerCase().endsWith(side==="left"?".l":".r"));
+   }
    if(region==="elbow"||region==="knee"){matches=matches.filter(e=>!e.name.toLowerCase().includes("phalange"))}
    if(!matches.length){
      info.textContent="No named skeletal anchors found for this region. The atlas may use different names.";
      viewer.clearRegion();notify("No confirmed model anchors for "+regionDef[1]+". Try searching a bone by name.");return false;
    }
    const box=new THREE.Box3();for(const e of matches)box.union(meshBounds(e));
+   // Restrict long-bone regions to their joint level instead of encompassing the entire arm/leg.
+   const jointTypes={elbow:["humerus","radius"],knee:["femur","tibia"],shoulder:["humerus","clavicle"]};
+   if(jointTypes[region]){
+     const terms2=jointTypes[region],first=matches.filter(e=>normalize(e.name).includes(terms2[0])),second=matches.filter(e=>normalize(e.name).includes(terms2[1]));
+     if(first.length&&second.length){const a=new THREE.Box3(),b=new THREE.Box3();for(const e of first)a.union(meshBounds(e));for(const e of second)b.union(meshBounds(e));
+       const y=region==="shoulder"?(a.max.y+b.getCenter(new THREE.Vector3()).y)/2:(a.min.y+b.max.y)/2;
+       const full=new THREE.Box3();for(const e of skeletal)full.union(meshBounds(e));
+       const half=full.getSize(new THREE.Vector3()).y*.045;
+       box.min.y=y-half;box.max.y=y+half;
+     }
+   }
    if(box.isEmpty()){info.textContent="Region mesh bounds unavailable.";return false}
    const body=new THREE.Box3();for(const e of skeletal)body.union(meshBounds(e));
    const h=Math.max(.01,body.getSize(new THREE.Vector3()).length());
@@ -81,11 +96,11 @@ export function installRegions(viewer,notify) {
    viewer.regionFilter=allowed;viewer.enabled=new Set([system]);viewer.isolated=null;
    if(viewer.selected&&!allowed.has(viewer.selected))viewer.selected=null;
    viewer.apply();viewer.refreshRegionList();viewer.boxFocus(box);
-   info.textContent=regionDef[1]+" · "+system+" · "+allowed.size+" selectable structures (spatial estimate from source models)";
+   info.textContent=regionDef[1]+" · "+system+" · "+(side==="both"?"both sides":side)+" · "+allowed.size+" selectable structures (spatial estimate from source models)";
    return true
  }
  document.getElementById("regionJump").onclick=go;
- select.onchange=go;sys.onchange=go;
+ select.onchange=go;sys.onchange=go;sideSelect.onchange=go;
  clear.onclick=()=>{viewer.clearRegion();viewer.fitAll()};
  viewer.navigateRegion=async(region,system="Skeleton")=>{if(!REGIONS.find(r=>r[0]===region))return false;select.value=region;sys.value=system;return go()};
  viewer.onRegionSelectionChanged=()=>{if(viewer.activeRegion!=="whole")renderList()};
