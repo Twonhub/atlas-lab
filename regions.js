@@ -45,7 +45,7 @@ export function installRegions(viewer,notify) {
  }
  viewer.refreshRegionList=()=>{if(viewer.activeRegion==="whole"){viewer.regionList=[];renderList();return}const system=sys.value;viewer.regionList=[...viewer.registry.values()].filter(e=>e.system===system&&viewer.regionFilter?.has(e.key)).sort((a,b)=>a.name.localeCompare(b.name));renderList()};
  const baseApply=viewer.apply.bind(viewer);
- viewer.apply=(...args)=>{baseApply(...args);if(viewer.activeRegion!=="whole")viewer.refreshRegionList()};
+ viewer.apply=(...args)=>{baseApply(...args)};
  viewer.clearRegion=()=>{viewer.activeRegion="whole";viewer.regionFilter=null;viewer.regionList=[];select.value="whole";info.textContent="Whole body • all visible structures in selected systems";viewer.apply()};
  async function go(){
    const token=++pending;const region=select.value,system=sys.value;
@@ -80,7 +80,7 @@ export function installRegions(viewer,notify) {
    if(!allowed.size){viewer.regionFilter=null;viewer.activeRegion="whole";info.textContent="No "+system+" meshes found in this area. Change the system or region.";notify(info.textContent);viewer.apply();return false}
    viewer.regionFilter=allowed;viewer.enabled=new Set([system]);viewer.isolated=null;
    if(viewer.selected&&!allowed.has(viewer.selected))viewer.selected=null;
-   viewer.apply();viewer.boxFocus(box);
+   viewer.apply();viewer.refreshRegionList();viewer.boxFocus(box);
    info.textContent=regionDef[1]+" · "+system+" · "+allowed.size+" selectable structures (spatial estimate from source models)";
    return true
  }
