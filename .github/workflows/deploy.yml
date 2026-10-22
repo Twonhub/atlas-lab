@@ -28,7 +28,8 @@ jobs:
           node --check dissection.js
           node --check regions.js
           node --check anatomy_info.js
-          node --test qa/regions.test.cjs
+          node --test qa/regions.test.cjs qa/model_naming.test.cjs
+          node --check model_naming.js
           python3 - <<'PYLESSONS'
           import json
           lessons=json.load(open('lessons.json'))
@@ -61,10 +62,11 @@ jobs:
           print(path.name,len(raw),"bytes validated")
           PYVALID
           done
+          python3 qa/check_model_labels.py
           curl -fL --retry 4 "${base}/License.txt" -o _site/models/License.txt
           curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/LICENSE -o _site/UPSTREAM_LICENSE.txt
           curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/NOTICE -o _site/UPSTREAM_NOTICE.txt
-          cp index.html app.js viewer.js dissection.js regions.js anatomy_info.js styles.css study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md MODEL_LICENSE_AND_ATTRIBUTION.md _site/
+          cp index.html app.js viewer.js dissection.js regions.js model_naming.js anatomy_info.js styles.css study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md MODEL_LICENSE_AND_ATTRIBUTION.md _site/
           touch _site/.nojekyll
           python3 - <<'PYMANIFEST'
           import json,pathlib
