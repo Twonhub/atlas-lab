@@ -9,7 +9,12 @@
     "answer": "Femur",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-4-bones-of-the-lower-limb",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Transmits body weight between hip and knee and provides leverage for thigh muscles.",
+    "description": "The femur is the longest and strongest bone of the human skeleton. Its rounded head meets the acetabulum; the neck joins the shaft, which ends in medial and lateral condyles that participate in the knee joint.",
+    "relationships": "Hip bone, patella, tibia, quadriceps and hamstring attachment sites.",
+    "study_tip": "Find the head, neck, greater trochanter and distal condyles; compare the anterior and posterior views.",
+    "short": "The femur forms the thigh; its head articulates with the acetabulum at the hip."
   },
   {
     "id": "f002",
@@ -21,7 +26,12 @@
     "answer": "Tibia",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-4-bones-of-the-lower-limb",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Bears most of the leg's weight and forms the medial ankle.",
+    "description": "The tibia is the large medial bone of the leg. Its proximal condyles meet the femur at the knee; its distal medial malleolus forms the inner ankle. It participates in the ankle joint with the talus.",
+    "relationships": "Femur, fibula, talus, patellar ligament, interosseous membrane.",
+    "study_tip": "Locate the tibial tuberosity, anterior crest and medial malleolus.",
+    "short": "The tibia is the larger, medial, primary weight-bearing bone of the leg."
   },
   {
     "id": "f003",
@@ -33,7 +43,12 @@
     "answer": "Fibula",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-4-bones-of-the-lower-limb",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Provides lateral ankle stability and attachment for muscles; it bears relatively little body weight.",
+    "description": "The fibula is the slender lateral bone of the lower leg. Its head lies near the knee, while its distal end forms the lateral malleolus. It does not articulate directly with the femur.",
+    "relationships": "Tibia, talus, interosseous membrane and lateral ankle ligaments.",
+    "study_tip": "Compare medial tibia with lateral fibula and identify the lateral malleolus.",
+    "short": "The fibula is the slender lateral bone of the leg."
   },
   {
     "id": "f004",
@@ -45,7 +60,12 @@
     "answer": "Patella",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-4-bones-of-the-lower-limb",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Improves the mechanical leverage of the quadriceps tendon over the knee.",
+    "description": "The patella is a sesamoid bone within the knee extensor mechanism. Its posterior articular surface glides against the femur as the knee bends and straightens.",
+    "relationships": "Quadriceps tendon, patellar ligament, distal femur and proximal tibia.",
+    "study_tip": "Locate the apex inferiorly and the broad base superiorly.",
+    "short": "The patella is a sesamoid bone embedded in the quadriceps tendon."
   },
   {
     "id": "f005",
@@ -57,7 +77,12 @@
     "answer": "Humerus",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Acts as the upper arm's bony lever for shoulder and elbow movements.",
+    "description": "The humerus extends from the shoulder to the elbow. The proximal head articulates with the scapular glenoid, and the distal trochlea and capitulum articulate with ulna and radius.",
+    "relationships": "Scapula, radius, ulna, deltoid insertion and rotator-cuff tendons.",
+    "study_tip": "Identify the head, greater tubercle, deltoid tuberosity and distal epicondyles.",
+    "short": "The humerus is the long bone of the arm between shoulder and elbow."
   },
   {
     "id": "f006",
@@ -69,7 +94,12 @@
     "answer": "Radius",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Allows pronation and supination with the ulna and transfers loads through the wrist.",
+    "description": "The radius is the lateral forearm bone in anatomical position (thumb side). Its head rotates near the elbow and the broad distal end meets carpal bones at the wrist.",
+    "relationships": "Ulna, humerus, scaphoid, lunate and interosseous membrane.",
+    "study_tip": "Rotate to anatomical position and distinguish thumb-side radius from the ulna.",
+    "short": "In anatomical position, the radius is the lateral bone of the forearm, on the thumb side."
   },
   {
     "id": "f007",
@@ -81,7 +111,12 @@
     "answer": "Ulna",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Stabilizes the elbow and acts as a pivot partner for forearm rotation.",
+    "description": "The ulna lies medially in anatomical position (little-finger side). Its olecranon forms the point of the elbow; the trochlear notch articulates with the humerus.",
+    "relationships": "Radius, trochlea of humerus, olecranon, interosseous membrane.",
+    "study_tip": "Identify olecranon and coronoid process; compare the narrow distal and broad proximal ends.",
+    "short": "In anatomical position, the ulna is the medial forearm bone."
   },
   {
     "id": "f008",
@@ -93,7 +128,12 @@
     "answer": "Scapula",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-1-the-pectoral-girdle",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Provides muscle attachments and the socket for shoulder movement.",
+    "description": "The scapula is a flat triangular shoulder-girdle bone on the posterior thorax. The glenoid cavity articulates with the humeral head and the acromion connects with the clavicle.",
+    "relationships": "Clavicle, humerus, rotator-cuff muscles, serratus anterior, trapezius.",
+    "study_tip": "Locate scapular spine, acromion, coracoid process and glenoid cavity.",
+    "short": "The scapula is the shoulder blade; its glenoid cavity articulates with the humeral head."
   },
   {
     "id": "f009",
@@ -105,7 +145,12 @@
     "answer": "Clavicle",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-1-the-pectoral-girdle",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Braces the shoulder laterally away from the thorax and transfers upper-limb forces.",
+    "description": "The clavicle is an S-shaped bone between the sternum and acromion of the scapula. Its medial sternoclavicular and lateral acromioclavicular articulations connect upper limb and trunk.",
+    "relationships": "Manubrium, acromion, sternoclavicular and acromioclavicular joints.",
+    "study_tip": "Identify the thicker sternal and flatter acromial ends.",
+    "short": "The clavicle is the collarbone and articulates with the sternum and scapula."
   },
   {
     "id": "f010",
@@ -117,7 +162,12 @@
     "answer": "Sternum",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-4-the-thoracic-cage",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Protects anterior thoracic structures and anchors the ribs and clavicles.",
+    "description": "The sternum lies along the anterior midline of the chest. Its three main parts are the manubrium, body and xiphoid process; costal cartilages link most true ribs to it.",
+    "relationships": "Clavicles, costal cartilages, ribs and anterior thoracic wall.",
+    "study_tip": "Find the jugular notch, manubriosternal junction (sternal angle) and xiphoid.",
+    "short": "The sternum is the breastbone on the anterior midline of the thorax."
   },
   {
     "id": "f011",
@@ -129,7 +179,12 @@
     "answer": "Mandible",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Supports the lower teeth and moves during chewing and speech.",
+    "description": "The mandible is the movable lower-jaw bone. Its condylar processes articulate with temporal bones, forming temporomandibular joints; the coronoid processes anchor temporalis muscles.",
+    "relationships": "Temporal bones, teeth, masseter and temporalis muscles.",
+    "study_tip": "Find the body, ramus, angle, condylar and coronoid processes.",
+    "short": "The mandible forms the lower jaw and articulates with the temporal bones."
   },
   {
     "id": "f012",
@@ -141,7 +196,12 @@
     "answer": "Occipital bone",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Protects the back of the brain and transmits the spinal cord through the foramen magnum.",
+    "description": "The occipital bone forms much of the posterior and inferior skull. Its large foramen magnum surrounds the transition from medulla to spinal cord and its condyles articulate with atlas (C1).",
+    "relationships": "Parietal and temporal bones, atlas and posterior neck muscles.",
+    "study_tip": "Rotate beneath the skull to locate the foramen magnum and occipital condyles.",
+    "short": "The occipital bone is in the posterior skull and contains the foramen magnum."
   },
   {
     "id": "f013",
@@ -153,7 +213,12 @@
     "answer": "Frontal bone",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Forms the forehead, roofs of the orbits, and anterior part of the cranial cavity.",
+    "description": "The frontal bone forms the anterior cranial vault. It articulates with paired parietal bones at the coronal suture and contributes to the orbital walls and frontal sinus region.",
+    "relationships": "Parietal bones, ethmoid, sphenoid and superior orbital margins.",
+    "study_tip": "Identify the orbital plates and coronal suture.",
+    "short": "The frontal bone forms the forehead and part of the orbital roofs."
   },
   {
     "id": "f014",
@@ -165,7 +230,12 @@
     "answer": "Atlas",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-3-the-vertebral-column",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Supports the skull and participates in flexion-extension at the atlanto-occipital joints.",
+    "description": "Atlas (C1) is the first cervical vertebra. It lacks a typical vertebral body and consists mainly of anterior and posterior arches with lateral masses.",
+    "relationships": "Occipital condyles, axis (C2), transverse ligament and upper cervical joints.",
+    "study_tip": "Compare its ring shape with the dens-bearing axis below it.",
+    "short": "The atlas (C1) is the first cervical vertebra and supports the skull."
   },
   {
     "id": "f015",
@@ -177,7 +247,12 @@
     "answer": "Axis",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-3-the-vertebral-column",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Provides a pivot for head rotation through its dens.",
+    "description": "Axis (C2) is the second cervical vertebra. Its dens projects superiorly into the ring of atlas, permitting rotation of the head at the atlanto-axial joint.",
+    "relationships": "Atlas, dens, transverse ligament and other cervical vertebrae.",
+    "study_tip": "Locate the dens and see how it differs from C1.",
+    "short": "The axis (C2) bears the dens around which the atlas rotates."
   },
   {
     "id": "f016",
@@ -189,7 +264,12 @@
     "answer": "Deltoid",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Abducts the arm mainly through its middle fibers; other fibers assist flexion or extension.",
+    "description": "The deltoid is the large multipennate shoulder muscle covering the glenohumeral joint. Its fibers arise from clavicle, acromion and scapular spine and insert on the deltoid tuberosity.",
+    "relationships": "Clavicle, scapula, humerus, axillary nerve and rotator cuff.",
+    "study_tip": "Distinguish anterior, middle and posterior portions rather than treating all actions as identical.",
+    "short": "The deltoid's middle fibers abduct the arm at the shoulder."
   },
   {
     "id": "f017",
@@ -201,7 +281,12 @@
     "answer": "Supraspinatus",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Assists the initiation of shoulder abduction and helps stabilize the humeral head.",
+    "description": "Supraspinatus occupies the supraspinous fossa above the scapular spine. Its tendon passes beneath the acromion to the greater tubercle as part of the rotator cuff.",
+    "relationships": "Scapular supraspinous fossa, greater tubercle of humerus, suprascapular nerve.",
+    "study_tip": "Look at the superior posterior scapula and trace the tendon toward the humeral head.",
+    "short": "Supraspinatus is a rotator-cuff muscle that assists initiation of arm abduction."
   },
   {
     "id": "f018",
@@ -213,7 +298,12 @@
     "answer": "Infraspinatus",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Laterally rotates the humerus and stabilizes the shoulder joint.",
+    "description": "Infraspinatus lies in the infraspinous fossa below the scapular spine. Its tendon inserts on the greater tubercle of the humerus and contributes to the rotator cuff.",
+    "relationships": "Scapula, humerus, suprascapular nerve and teres minor.",
+    "study_tip": "Compare this larger posterior rotator-cuff muscle with teres minor below it.",
+    "short": "Infraspinatus is a rotator-cuff muscle that laterally rotates the humerus."
   },
   {
     "id": "f019",
@@ -225,7 +315,12 @@
     "answer": "Subscapularis",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Medially rotates the humerus and helps stabilize its head in the glenoid.",
+    "description": "Subscapularis occupies the anterior (costal) surface of the scapula. Its tendon attaches to the lesser tubercle of the humerus and is the anterior rotator-cuff muscle.",
+    "relationships": "Anterior scapula, lesser tubercle, subscapular nerves, shoulder capsule.",
+    "study_tip": "Rotate the scapula to view its anterior surface and tendon.",
+    "short": "Subscapularis lies on the anterior scapula and medially rotates the humerus."
   },
   {
     "id": "f020",
@@ -237,7 +332,12 @@
     "answer": "Teres minor",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Assists lateral shoulder rotation and stabilizes the humeral head.",
+    "description": "Teres minor is a relatively small posterior shoulder muscle running from lateral border of scapula to the greater tubercle of the humerus.",
+    "relationships": "Scapula, humerus, axillary nerve and infraspinatus.",
+    "study_tip": "Compare its inferior position relative to infraspinatus.",
+    "short": "Teres minor is a rotator-cuff muscle that assists lateral rotation of the arm."
   },
   {
     "id": "f021",
@@ -249,7 +349,12 @@
     "answer": "Biceps brachii",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Flexes the elbow and strongly supinates the forearm.",
+    "description": "Biceps brachii has long and short heads originating on the scapula and joins in a tendon attaching to radial tuberosity. It also assists shoulder flexion.",
+    "relationships": "Scapula, radial tuberosity, bicipital aponeurosis, musculocutaneous nerve.",
+    "study_tip": "Follow both heads proximally and distinguish flexion from supination.",
+    "short": "Biceps brachii flexes the elbow and supinates the forearm."
   },
   {
     "id": "f022",
@@ -261,7 +366,12 @@
     "answer": "Triceps brachii",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Extends the elbow through its common tendon.",
+    "description": "Triceps brachii has three heads on the posterior arm. The long head comes from the scapula; others originate on the humerus and all insert via a tendon on the olecranon.",
+    "relationships": "Scapula, humerus, olecranon of ulna, radial nerve.",
+    "study_tip": "Find posterior arm, three heads and olecranon insertion.",
+    "short": "Triceps brachii is the principal extensor of the forearm at the elbow."
   },
   {
     "id": "f023",
@@ -273,7 +383,12 @@
     "answer": "Pectoralis major",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Adducts and medially rotates the humerus; clavicular fibers also assist shoulder flexion.",
+    "description": "Pectoralis major is a large anterior thoracic muscle arising from clavicle, sternum and adjacent costal cartilages and converging onto the humerus.",
+    "relationships": "Clavicle, sternum, costal cartilages, humerus, medial and lateral pectoral nerves.",
+    "study_tip": "Follow its broad origin and converging insertion near the intertubercular groove.",
+    "short": "Pectoralis major adducts and medially rotates the arm; portions also assist arm flexion."
   },
   {
     "id": "f024",
@@ -285,7 +400,12 @@
     "answer": "Rectus femoris",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-6-appendicular-muscles-of-the-pelvic-girdle-and-lower-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Extends the knee and flexes the hip because it spans both joints.",
+    "description": "Rectus femoris is the superficial central quadriceps muscle of the anterior thigh. It arises from the pelvis and joins the quadriceps tendon into the patella.",
+    "relationships": "Anterior inferior iliac spine, patella, tibial tuberosity, femoral nerve.",
+    "study_tip": "Compare its two-joint action with the other vastus quadriceps muscles.",
+    "short": "Rectus femoris is a quadriceps muscle that extends the knee and flexes the hip."
   },
   {
     "id": "f025",
@@ -297,7 +417,12 @@
     "answer": "Gastrocnemius",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-6-appendicular-muscles-of-the-pelvic-girdle-and-lower-limbs",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Plantarflexes the ankle and assists knee flexion.",
+    "description": "Gastrocnemius has medial and lateral heads from the distal femur and joins the calcaneal (Achilles) tendon inserting on the calcaneus.",
+    "relationships": "Femoral condyles, soleus, calcaneal tendon, tibial nerve.",
+    "study_tip": "Examine the superficial calf above soleus and trace the common Achilles tendon.",
+    "short": "Gastrocnemius helps plantarflex the foot and flex the knee."
   },
   {
     "id": "f026",
@@ -309,7 +434,12 @@
     "answer": "Sciatic nerve",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Carries motor and sensory nerve fibers to much of the posterior thigh and most of the leg and foot through its terminal branches.",
+    "description": "The sciatic nerve arises from lumbosacral roots and typically exits the pelvis through the greater sciatic foramen below piriformis, descending in the posterior thigh before splitting into tibial and common fibular divisions.",
+    "relationships": "Sacral plexus, piriformis, tibial nerve, common fibular nerve, hamstring muscles.",
+    "study_tip": "Follow the nerve posteriorly and identify its terminal branches.",
+    "short": "The sciatic nerve arises from the sacral plexus and travels through the posterior thigh."
   },
   {
     "id": "f027",
@@ -321,7 +451,12 @@
     "answer": "Femoral nerve",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Supplies major anterior-thigh muscles and provides cutaneous sensation through branches.",
+    "description": "The femoral nerve arises from lumbar plexus roots and passes beneath the inguinal ligament into the anterior thigh. It innervates quadriceps and other muscles and gives rise to the saphenous nerve.",
+    "relationships": "Lumbar plexus, inguinal ligament, iliopsoas, quadriceps, saphenous nerve.",
+    "study_tip": "Contrast its anterior position with the sciatic nerve posteriorly.",
+    "short": "The femoral nerve originates from the lumbar plexus and supplies major anterior-thigh muscles."
   },
   {
     "id": "f028",
@@ -333,7 +468,12 @@
     "answer": "Radial nerve",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Supplies many extensor muscles of the upper limb and carries sensory fibers.",
+    "description": "The radial nerve arises from the posterior cord of brachial plexus, travels behind the humerus, then divides into superficial sensory and deeper motor branches in the forearm.",
+    "relationships": "Brachial plexus, radial groove, triceps, posterior forearm extensors.",
+    "study_tip": "Locate its passage around the posterior humerus.",
+    "short": "The radial nerve supplies many posterior arm and forearm extensor muscles."
   },
   {
     "id": "f029",
@@ -345,7 +485,12 @@
     "answer": "Median nerve",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Supplies many forearm flexors and some thumb and hand muscles and carries sensation from part of the hand.",
+    "description": "The median nerve arises from brachial plexus cords and runs through the anterior arm and forearm. It passes through the carpal tunnel with flexor tendons into the palm.",
+    "relationships": "Brachial plexus, pronator teres, flexor tendons, carpal tunnel and thenar muscles.",
+    "study_tip": "Follow it through the carpal tunnel and identify nearby flexor tendons.",
+    "short": "The median nerve passes through the carpal tunnel and supplies parts of the hand."
   },
   {
     "id": "f030",
@@ -357,7 +502,12 @@
     "answer": "Spinal cord",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-introduction",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Conveys signals between brain and body and organizes spinal reflexes.",
+    "description": "The spinal cord extends from the brainstem through the vertebral canal and gives rise to spinal nerve roots. Its gray matter contains neuronal cell bodies and white matter contains ascending and descending tracts.",
+    "relationships": "Medulla, vertebral canal, spinal nerve roots and meninges.",
+    "study_tip": "Study cervical, thoracic, lumbar and sacral levels and distinguish cord from surrounding vertebrae.",
+    "short": "The spinal cord is part of the central nervous system and lies in the vertebral canal."
   },
   {
     "id": "f031",
@@ -369,7 +519,12 @@
     "answer": "Heart",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-introduction",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Generates blood flow through pulmonary and systemic circulations.",
+    "description": "The heart is a muscular pump located in the mediastinum. Its four chambers receive returning blood and propel it through pulmonary and systemic routes; valves enforce largely one-way flow. The source atlas models chambers individually, not a single Heart mesh.",
+    "relationships": "Right and left atria, ventricles, atrioventricular valves, pulmonary trunk and aorta.",
+    "study_tip": "Compare atria (receiving chambers) with ventricles (pumping chambers), then study cardiac valves.",
+    "short": "The heart drives pulmonary and systemic circulation. This 3D source atlas represents its right and left atria and ventricles as individually selectable structures, rather than one mesh named Heart."
   },
   {
     "id": "f032",
@@ -381,7 +536,12 @@
     "answer": "Lungs",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-introduction",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Exchange oxygen and carbon dioxide with the blood.",
+    "description": "The paired lungs occupy the pleural cavities. Air moves through the branching bronchial tree to alveoli where gas exchange occurs; the right lung typically has three lobes and the left two.",
+    "relationships": "Trachea, bronchi, pleura, diaphragm and pulmonary vessels.",
+    "study_tip": "Study individual lobes and the location of the hilum and bronchial tree.",
+    "short": "The lungs contain alveoli where oxygen and carbon dioxide diffuse between air and blood."
   },
   {
     "id": "f033",
@@ -393,7 +553,12 @@
     "answer": "Liver",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-6-accessory-organs-in-digestion-the-liver-pancreas-and-gallbladder",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Produces bile, processes absorbed nutrients and participates in metabolic regulation.",
+    "description": "The liver is a large gland in the right upper abdomen, mostly below the diaphragm. Hepatocytes process nutrients and toxins, synthesize plasma proteins and produce bile that travels through biliary ducts.",
+    "relationships": "Diaphragm, gallbladder, hepatic artery, portal vein, hepatic veins.",
+    "study_tip": "Find the liver's upper abdominal location, and distinguish its blood supply from bile drainage.",
+    "short": "The liver produces bile and carries out important metabolic functions."
   },
   {
     "id": "f034",
@@ -405,7 +570,12 @@
     "answer": "Pancreas",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-6-accessory-organs-in-digestion-the-liver-pancreas-and-gallbladder",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Provides digestive enzymes and endocrine hormones including insulin and glucagon.",
+    "description": "The pancreas lies predominantly behind the stomach, extending from the duodenal curve toward the spleen. Exocrine acini secrete enzymes into ducts while pancreatic islets secrete hormones into the blood.",
+    "relationships": "Duodenum, stomach, spleen, pancreatic duct and portal venous region.",
+    "study_tip": "Distinguish pancreatic head, body and tail and exocrine versus endocrine roles.",
+    "short": "The pancreas secretes digestive enzymes and hormones, including insulin."
   },
   {
     "id": "f035",
@@ -417,7 +587,12 @@
     "answer": "Stomach",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-introduction",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Stores and mixes food and begins substantial chemical digestion of proteins.",
+    "description": "The stomach is a distensible muscular sac between esophagus and duodenum. Gastric glands produce acid and enzymes; muscular contractions mix food to form chyme before controlled passage through the pylorus.",
+    "relationships": "Esophagus, diaphragm, liver, pancreas and duodenum.",
+    "study_tip": "Locate the fundus, body, pylorus, lesser curvature and greater curvature.",
+    "short": "The stomach mixes food and secretes gastric acid and digestive enzymes."
   },
   {
     "id": "f036",
@@ -429,7 +604,12 @@
     "answer": "Kidney",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-introduction",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Filters blood to form urine and regulates fluid, electrolyte and acid-base balance.",
+    "description": "The kidneys are retroperitoneal paired organs on the posterior abdominal wall. Functional nephron units perform filtration, reabsorption and secretion; produced urine drains through collecting systems to the ureters.",
+    "relationships": "Adrenal glands, renal vessels, ureter, renal cortex and medulla.",
+    "study_tip": "Trace the renal vessels through hilum and urine through pelvis to ureter.",
+    "short": "The kidneys filter blood and produce urine while regulating fluid and electrolyte balance."
   },
   {
     "id": "f037",
@@ -441,7 +621,12 @@
     "answer": "Spleen",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Filters circulating blood and supports immune responses.",
+    "description": "The spleen is a lymphoid organ in the left upper abdomen beside the stomach. White pulp supports immune function while red pulp participates in blood filtration and removal of aged erythrocytes.",
+    "relationships": "Stomach, diaphragm, pancreatic tail and splenic vessels.",
+    "study_tip": "Locate the splenic hilum and contrast its blood filtering with lymph-node lymph filtering.",
+    "short": "The spleen filters blood and participates in immune responses."
   },
   {
     "id": "cardio-right-atrium",
@@ -453,7 +638,12 @@
     "answer": "Right atrium",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Receives systemic venous blood before it passes to the right ventricle.",
+    "description": "The right atrium is the thin-walled right upper cardiac chamber. It receives blood from the superior and inferior venae cavae and coronary sinus and communicates through the tricuspid valve with right ventricle.",
+    "relationships": "Venae cavae, coronary sinus, tricuspid valve, right ventricle.",
+    "study_tip": "Trace systemic blood return into right atrium.",
+    "short": "Receives blood returning from systemic circulation through the venae cavae and sends it to the right ventricle."
   },
   {
     "id": "cardio-right-ventricle",
@@ -465,7 +655,12 @@
     "answer": "Right ventricle",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Pumps deoxygenated blood through the pulmonary valve into the pulmonary trunk.",
+    "description": "The right ventricle lies anteriorly and has a thinner muscular wall than the left ventricle under normal conditions. It receives blood through the tricuspid valve and ejects through the pulmonary valve.",
+    "relationships": "Right atrium, tricuspid valve, pulmonary valve, pulmonary trunk.",
+    "study_tip": "Trace the path toward lungs and compare ventricular wall thickness.",
+    "short": "Pumps blood into the pulmonary trunk toward the lungs."
   },
   {
     "id": "cardio-left-atrium",
@@ -477,7 +672,12 @@
     "answer": "Left atrium",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
-    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Receives oxygenated blood returning from the lungs.",
+    "description": "The left atrium forms much of the posterior heart base and receives pulmonary venous blood. It communicates with left ventricle through the mitral valve.",
+    "relationships": "Pulmonary veins, mitral valve, left ventricle.",
+    "study_tip": "Locate the posterior atrial chamber and its pulmonary venous connections.",
+    "short": "Receives oxygenated blood from the pulmonary veins and sends it into the left ventricle."
   },
   {
     "id": "cardio-left-ventricle",
@@ -489,6 +689,470 @@
     "answer": "Left ventricle",
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed",
+    "function": "Drives the high-pressure systemic circulation through the aorta.",
+    "description": "The left ventricle has a thick myocardium adapted for systemic pumping. It receives blood across mitral valve and ejects it through aortic valve into the ascending aorta.",
+    "relationships": "Left atrium, mitral valve, aortic valve, aorta, interventricular septum.",
+    "study_tip": "Compare myocardial thickness with right ventricle and follow the aortic outflow.",
+    "short": "Pumps oxygenated blood into the aorta for systemic circulation."
+  },
+  {
+    "id": "e042",
+    "name": "Parietal bone",
+    "system": "Skeleton",
+    "region": "Skull",
+    "fact": "Each parietal bone forms part of the upper lateral cranial vault.",
+    "short": "Each parietal bone forms part of the upper lateral cranial vault.",
+    "function": "Protects the superior portions of the brain and contributes to the cranium.",
+    "description": "Each parietal bone forms part of the upper lateral cranial vault. Paired parietal bones meet along the sagittal suture and connect with frontal, temporal and occipital bones.",
+    "relationships": "Frontal, temporal and occipital bones; sagittal and coronal sutures.",
+    "study_tip": "Look above each temporal bone and identify the sagittal midline suture.",
+    "question": "Which structure is described as: Each parietal bone forms part of the upper lateral cranial vault?",
+    "answer": "Parietal bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e043",
+    "name": "Temporal bone",
+    "system": "Skeleton",
+    "region": "Skull",
+    "fact": "The temporal bone is a complex paired bone in the lower lateral skull.",
+    "short": "The temporal bone is a complex paired bone in the lower lateral skull.",
+    "function": "Protects hearing and balance organs and participates in the temporomandibular joint.",
+    "description": "The temporal bone is a complex paired bone in the lower lateral skull. It houses middle and inner ear structures, forms the mandibular fossa and contributes to skull base.",
+    "relationships": "Zygomatic arch, mandible, sphenoid and occipital bones.",
+    "study_tip": "Locate the external acoustic meatus, mastoid process and mandibular fossa.",
+    "question": "Which structure is described as: The temporal bone is a complex paired bone in the lower lateral skull?",
+    "answer": "Temporal bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e044",
+    "name": "Sphenoid bone",
+    "system": "Skeleton",
+    "region": "Skull",
+    "fact": "The sphenoid is a central skull-base bone with broad greater and lesser wings.",
+    "short": "The sphenoid is a central skull-base bone with broad greater and lesser wings.",
+    "function": "Links much of the skull base and provides passages for neurovascular structures.",
+    "description": "The sphenoid is a central skull-base bone with broad greater and lesser wings. Its sella turcica houses the pituitary gland, and several foramina transmit nerves and vessels.",
+    "relationships": "Ethmoid, frontal and temporal bones; pituitary fossa and cranial foramina.",
+    "study_tip": "Rotate below the skull to see sella turcica and its greater wings.",
+    "question": "Which structure is described as: The sphenoid is a central skull-base bone with broad greater and lesser wings?",
+    "answer": "Sphenoid bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e045",
+    "name": "Ethmoid bone",
+    "system": "Skeleton",
+    "region": "Skull",
+    "fact": "The ethmoid is a delicate midline bone of the anterior skull base and nasal cavity.",
+    "short": "The ethmoid is a delicate midline bone of the anterior skull base and nasal cavity.",
+    "function": "Contributes to smell pathways, orbital medial walls and nasal structures.",
+    "description": "The ethmoid is a delicate midline bone of the anterior skull base and nasal cavity. Its cribriform plate is perforated by olfactory nerve fibers; its perpendicular plate helps form the nasal septum.",
+    "relationships": "Frontal and sphenoid bones, nasal septum, orbits and olfactory nerve.",
+    "study_tip": "Find the cribriform plate and crista galli between the orbits.",
+    "question": "Which structure is described as: The ethmoid is a delicate midline bone of the anterior skull base and nasal cavity?",
+    "answer": "Ethmoid bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e046",
+    "name": "Maxilla",
+    "system": "Skeleton",
+    "region": "Skull",
+    "fact": "The paired maxillae form the upper jaw, hold upper teeth and contribute to hard palate, nasal cavity and floor of the orbit.",
+    "short": "The paired maxillae form the upper jaw, hold upper teeth and contribute to hard palate, nasal cavity and floor of the orbit.",
+    "function": "Supports upper dentition and face and forms portions of nasal and orbital walls.",
+    "description": "The paired maxillae form the upper jaw, hold upper teeth and contribute to hard palate, nasal cavity and floor of the orbit.",
+    "relationships": "Mandible, palatine, zygomatic and nasal bones; maxillary sinus.",
+    "study_tip": "Examine upper teeth sockets and lower orbital margins.",
+    "question": "Which structure is described as: The paired maxillae form the upper jaw, hold upper teeth and contribute to hard palate, nasal cavity and floor of the orbit.?",
+    "answer": "Maxilla",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e047",
+    "name": "Zygomatic bone",
+    "system": "Skeleton",
+    "region": "Skull",
+    "fact": "The paired zygomatic bones form cheek prominences and parts of the lateral orbital walls.",
+    "short": "The paired zygomatic bones form cheek prominences and parts of the lateral orbital walls.",
+    "function": "Supports facial structure and provides attachments for masticatory muscles.",
+    "description": "The paired zygomatic bones form cheek prominences and parts of the lateral orbital walls. Each joins the temporal bone to form the zygomatic arch.",
+    "relationships": "Temporal, maxillary, frontal and sphenoid bones.",
+    "study_tip": "Trace the cheek to the zygomatic arch.",
+    "question": "Which structure is described as: The paired zygomatic bones form cheek prominences and parts of the lateral orbital walls?",
+    "answer": "Zygomatic bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e048",
+    "name": "Nasal bone",
+    "system": "Skeleton",
+    "region": "Skull",
+    "fact": "The paired nasal bones form the upper bony bridge of the external nose.",
+    "short": "The paired nasal bones form the upper bony bridge of the external nose.",
+    "function": "Supports the upper nose and forms part of the facial skeleton.",
+    "description": "The paired nasal bones form the upper bony bridge of the external nose. Inferior nasal structures include cartilage.",
+    "relationships": "Frontal bone, maxilla and nasal cartilages.",
+    "study_tip": "Distinguish hard nasal bone from flexible nasal cartilage.",
+    "question": "Which structure is described as: The paired nasal bones form the upper bony bridge of the external nose?",
+    "answer": "Nasal bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-2-the-skull",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e049",
+    "name": "Scaphoid bone",
+    "system": "Skeleton",
+    "region": "Wrist",
+    "fact": "The scaphoid is a proximal-row carpal bone on the thumb side of the wrist.",
+    "short": "The scaphoid is a proximal-row carpal bone on the thumb side of the wrist.",
+    "function": "Contributes to wrist stability, motion and load transfer.",
+    "description": "The scaphoid is a proximal-row carpal bone on the thumb side of the wrist. It articulates with the distal radius and links the carpal rows.",
+    "relationships": "Radius, lunate, trapezium and trapezoid.",
+    "study_tip": "Find the radial/thumb side of the proximal wrist.",
+    "question": "Which structure is described as: The scaphoid is a proximal-row carpal bone on the thumb side of the wrist?",
+    "answer": "Scaphoid bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e050",
+    "name": "Lunate bone",
+    "system": "Skeleton",
+    "region": "Wrist",
+    "fact": "The lunate is a crescent-shaped proximal-row carpal bone between scaphoid and triquetrum.",
+    "short": "The lunate is a crescent-shaped proximal-row carpal bone between scaphoid and triquetrum.",
+    "function": "Helps transmit forces through the wrist and permits radiocarpal motion.",
+    "description": "The lunate is a crescent-shaped proximal-row carpal bone between scaphoid and triquetrum. Its proximal surface contacts the distal radius.",
+    "relationships": "Radius, scaphoid, triquetrum and capitate.",
+    "study_tip": "Find the central proximal row of carpals.",
+    "question": "Which structure is described as: The lunate is a crescent-shaped proximal-row carpal bone between scaphoid and triquetrum?",
+    "answer": "Lunate bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e051",
+    "name": "Triquetrum",
+    "system": "Skeleton",
+    "region": "Wrist",
+    "fact": "The triquetrum is a proximal-row carpal bone on the ulnar side of the wrist, near the pisiform.",
+    "short": "The triquetrum is a proximal-row carpal bone on the ulnar side of the wrist, near the pisiform.",
+    "function": "Stabilizes the ulnar side of the carpus and transfers loads.",
+    "description": "The triquetrum is a proximal-row carpal bone on the ulnar side of the wrist, near the pisiform. It participates in intercarpal articulation.",
+    "relationships": "Lunate, hamate and pisiform.",
+    "study_tip": "Locate it beneath the pisiform on the little-finger side.",
+    "question": "Which structure is described as: The triquetrum is a proximal-row carpal bone on the ulnar side of the wrist, near the pisiform?",
+    "answer": "Triquetrum",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e052",
+    "name": "Pisiform bone",
+    "system": "Skeleton",
+    "region": "Wrist",
+    "fact": "The pisiform is a small pea-shaped sesamoid bone embedded in the flexor carpi ulnaris tendon on the palmar ulnar wrist.",
+    "short": "The pisiform is a small pea-shaped sesamoid bone embedded in the flexor carpi ulnaris tendon on the palmar ulnar wrist.",
+    "function": "Improves the tendon lever arm and contributes to ligament and muscle attachments.",
+    "description": "The pisiform is a small pea-shaped sesamoid bone embedded in the flexor carpi ulnaris tendon on the palmar ulnar wrist.",
+    "relationships": "Triquetrum, flexor carpi ulnaris and ulnar wrist ligaments.",
+    "study_tip": "View the palm-facing wrist to find its prominent position.",
+    "question": "Which structure is described as: The pisiform is a small pea-shaped sesamoid bone embedded in the flexor carpi ulnaris tendon on the palmar ulnar wrist.?",
+    "answer": "Pisiform bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e053",
+    "name": "Trapezium bone",
+    "system": "Skeleton",
+    "region": "Wrist",
+    "fact": "The trapezium is a distal-row carpal bone on the thumb side.",
+    "short": "The trapezium is a distal-row carpal bone on the thumb side.",
+    "function": "Supports thumb opposition and the thumb's wide range of motion.",
+    "description": "The trapezium is a distal-row carpal bone on the thumb side. It articulates with the first metacarpal at the thumb carpometacarpal joint.",
+    "relationships": "First metacarpal, scaphoid and trapezoid.",
+    "study_tip": "Find the saddle-shaped thumb carpometacarpal joint.",
+    "question": "Which structure is described as: The trapezium is a distal-row carpal bone on the thumb side?",
+    "answer": "Trapezium bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e054",
+    "name": "Trapezoid bone",
+    "system": "Skeleton",
+    "region": "Wrist",
+    "fact": "The trapezoid is a small distal-row carpal bone between trapezium and capitate and articulates with the second metacarpal.",
+    "short": "The trapezoid is a small distal-row carpal bone between trapezium and capitate and articulates with the second metacarpal.",
+    "function": "Supports the relatively stable index-finger carpometacarpal region.",
+    "description": "The trapezoid is a small distal-row carpal bone between trapezium and capitate and articulates with the second metacarpal.",
+    "relationships": "Scaphoid, trapezium, capitate and second metacarpal.",
+    "study_tip": "Look between trapezium and capitate in the distal carpal row.",
+    "question": "Which structure is described as: The trapezoid is a small distal-row carpal bone between trapezium and capitate and articulates with the second metacarpal.?",
+    "answer": "Trapezoid bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e055",
+    "name": "Capitate bone",
+    "system": "Skeleton",
+    "region": "Wrist",
+    "fact": "The capitate is the largest carpal bone and occupies the center of the distal carpal row.",
+    "short": "The capitate is the largest carpal bone and occupies the center of the distal carpal row.",
+    "function": "Helps connect carpal rows and transfer forces toward the central hand.",
+    "description": "The capitate is the largest carpal bone and occupies the center of the distal carpal row. It articulates with the third metacarpal.",
+    "relationships": "Lunate, scaphoid, hamate, trapezoid and third metacarpal.",
+    "study_tip": "Find the large central carpal beneath the middle finger.",
+    "question": "Which structure is described as: The capitate is the largest carpal bone and occupies the center of the distal carpal row?",
+    "answer": "Capitate bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e056",
+    "name": "Hamate bone",
+    "system": "Skeleton",
+    "region": "Wrist",
+    "fact": "The hamate is a distal-row carpal bone on the ulnar side.",
+    "short": "The hamate is a distal-row carpal bone on the ulnar side.",
+    "function": "Supports ring/little-finger carpometacarpal joints and ligament attachments.",
+    "description": "The hamate is a distal-row carpal bone on the ulnar side. Its palmar hook helps form the medial boundary of the carpal tunnel.",
+    "relationships": "Capitate, triquetrum, fourth/fifth metacarpals and flexor retinaculum.",
+    "study_tip": "Turn to the palm to inspect the hook of hamate.",
+    "question": "Which structure is described as: The hamate is a distal-row carpal bone on the ulnar side?",
+    "answer": "Hamate bone",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-2-bones-of-the-upper-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e057",
+    "name": "Talus",
+    "system": "Skeleton",
+    "region": "Ankle",
+    "fact": "The talus is an ankle bone that articulates with the tibia and fibula above and the calcaneus below.",
+    "short": "The talus is an ankle bone that articulates with the tibia and fibula above and the calcaneus below.",
+    "function": "Transfers body weight from leg into the foot and permits ankle motion.",
+    "description": "The talus is an ankle bone that articulates with the tibia and fibula above and the calcaneus below. It has no direct muscular attachments.",
+    "relationships": "Tibia, fibula, calcaneus and navicular.",
+    "study_tip": "Identify its superior trochlea in the ankle mortise.",
+    "question": "Which structure is described as: The talus is an ankle bone that articulates with the tibia and fibula above and the calcaneus below?",
+    "answer": "Talus",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-4-bones-of-the-lower-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e058",
+    "name": "Calcaneus",
+    "system": "Skeleton",
+    "region": "Foot",
+    "fact": "The calcaneus is the heel bone and largest tarsal.",
+    "short": "The calcaneus is the heel bone and largest tarsal.",
+    "function": "Forms the heel lever for plantarflexion and bears substantial ground-reaction forces.",
+    "description": "The calcaneus is the heel bone and largest tarsal. It articulates superiorly with talus and serves as insertion for the calcaneal tendon.",
+    "relationships": "Talus, cuboid, Achilles tendon and plantar fascia.",
+    "study_tip": "Trace the Achilles tendon to the heel tuberosity.",
+    "question": "Which structure is described as: The calcaneus is the heel bone and largest tarsal?",
+    "answer": "Calcaneus",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-4-bones-of-the-lower-limb",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e059",
+    "name": "Sacrum",
+    "system": "Skeleton",
+    "region": "Pelvis",
+    "fact": "The sacrum is a triangular bone formed by fusion of sacral vertebrae.",
+    "short": "The sacrum is a triangular bone formed by fusion of sacral vertebrae.",
+    "function": "Transfers trunk loads to the pelvis and forms posterior wall of pelvic cavity.",
+    "description": "The sacrum is a triangular bone formed by fusion of sacral vertebrae. It connects the lumbar spine to the hip bones at sacroiliac joints.",
+    "relationships": "L5 vertebra, coccyx, ilia and sacroiliac joints.",
+    "study_tip": "Find anterior sacral foramina and the broad superior base.",
+    "question": "Which structure is described as: The sacrum is a triangular bone formed by fusion of sacral vertebrae?",
+    "answer": "Sacrum",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-3-the-vertebral-column",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e060",
+    "name": "Coccyx",
+    "system": "Skeleton",
+    "region": "Pelvis",
+    "fact": "The coccyx is a small terminal vertebral structure composed of fused coccygeal segments.",
+    "short": "The coccyx is a small terminal vertebral structure composed of fused coccygeal segments.",
+    "function": "Anchors supporting connective tissue and muscles of the pelvic floor.",
+    "description": "The coccyx is a small terminal vertebral structure composed of fused coccygeal segments. It provides attachment for pelvic-floor structures.",
+    "relationships": "Sacrum, levator ani and coccygeus attachments.",
+    "study_tip": "Locate the small tailbone below the sacrum.",
+    "question": "Which structure is described as: The coccyx is a small terminal vertebral structure composed of fused coccygeal segments?",
+    "answer": "Coccyx",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/7-3-the-vertebral-column",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e061",
+    "name": "Aortic arch",
+    "system": "Cardiovascular",
+    "region": "Thorax",
+    "fact": "The aortic arch curves from ascending toward descending aorta and gives rise to major arteries supplying head, neck and upper limbs.",
+    "short": "The aortic arch curves from ascending toward descending aorta and gives rise to major arteries supplying head, neck and upper limbs.",
+    "function": "Carries oxygenated blood from left ventricle toward systemic tissues.",
+    "description": "The aortic arch curves from ascending toward descending aorta and gives rise to major arteries supplying head, neck and upper limbs.",
+    "relationships": "Ascending/descending aorta and major supra-aortic branches.",
+    "study_tip": "Compare the aortic arch with the pulmonary trunk.",
+    "question": "Which structure is described as: The aortic arch curves from ascending toward descending aorta and gives rise to major arteries supplying head, neck and upper limbs.?",
+    "answer": "Aortic arch",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e062",
+    "name": "Ascending aorta",
+    "system": "Cardiovascular",
+    "region": "Thorax",
+    "fact": "The ascending aorta arises from the left ventricle through the aortic valve.",
+    "short": "The ascending aorta arises from the left ventricle through the aortic valve.",
+    "function": "Carries oxygenated blood toward the aortic arch and coronary circulation.",
+    "description": "The ascending aorta arises from the left ventricle through the aortic valve. Coronary arteries typically arise near its aortic root.",
+    "relationships": "Left ventricle, aortic valve, coronary arteries, aortic arch.",
+    "study_tip": "Trace systemic outflow from the left ventricle.",
+    "question": "Which structure is described as: The ascending aorta arises from the left ventricle through the aortic valve?",
+    "answer": "Ascending aorta",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e063",
+    "name": "Left coronary artery",
+    "system": "Cardiovascular",
+    "region": "Heart",
+    "fact": "The left coronary artery arises from the left aortic sinus and commonly divides into anterior interventricular and circumflex branches.",
+    "short": "The left coronary artery arises from the left aortic sinus and commonly divides into anterior interventricular and circumflex branches.",
+    "function": "Supplies portions of cardiac muscle with arterial blood.",
+    "description": "The left coronary artery arises from the left aortic sinus and commonly divides into anterior interventricular and circumflex branches.",
+    "relationships": "Aortic root, anterior interventricular artery and circumflex artery.",
+    "study_tip": "Identify the left coronary origin behind the pulmonary trunk.",
+    "question": "Which structure is described as: The left coronary artery arises from the left aortic sinus and commonly divides into anterior interventricular and circumflex branches.?",
+    "answer": "Left coronary artery",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e064",
+    "name": "Right coronary artery",
+    "system": "Cardiovascular",
+    "region": "Heart",
+    "fact": "The right coronary artery arises from the right aortic sinus and travels in the right atrioventricular groove, giving off variable branches.",
+    "short": "The right coronary artery arises from the right aortic sinus and travels in the right atrioventricular groove, giving off variable branches.",
+    "function": "Supplies parts of the heart muscle and often components of the cardiac conduction system.",
+    "description": "The right coronary artery arises from the right aortic sinus and travels in the right atrioventricular groove, giving off variable branches.",
+    "relationships": "Right atrium, right ventricle, right marginal artery and posterior interventricular branches.",
+    "study_tip": "Follow the right atrioventricular groove.",
+    "question": "Which structure is described as: The right coronary artery arises from the right aortic sinus and travels in the right atrioventricular groove, giving off variable branches.?",
+    "answer": "Right coronary artery",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e065",
+    "name": "Trachea",
+    "system": "Visceral",
+    "region": "Thorax",
+    "fact": "The trachea is the cartilaginous airway connecting larynx with the main bronchi.",
+    "short": "The trachea is the cartilaginous airway connecting larynx with the main bronchi.",
+    "function": "Conducts air and participates in mucociliary clearance.",
+    "description": "The trachea is the cartilaginous airway connecting larynx with the main bronchi. Its C-shaped cartilage rings support airway patency while a posterior membranous wall faces esophagus.",
+    "relationships": "Larynx, esophagus and main bronchi.",
+    "study_tip": "Find its bifurcation at the carina.",
+    "question": "Which structure is described as: The trachea is the cartilaginous airway connecting larynx with the main bronchi?",
+    "answer": "Trachea",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-2-the-lungs",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e066",
+    "name": "Esophagus",
+    "system": "Visceral",
+    "region": "Thorax",
+    "fact": "The esophagus is a muscular tube transporting swallowed material from pharynx through thorax to stomach.",
+    "short": "The esophagus is a muscular tube transporting swallowed material from pharynx through thorax to stomach.",
+    "function": "Propels food and liquids into stomach.",
+    "description": "The esophagus is a muscular tube transporting swallowed material from pharynx through thorax to stomach. Its muscular walls generate peristaltic contractions.",
+    "relationships": "Pharynx, trachea, diaphragm and stomach.",
+    "study_tip": "Locate it posterior to the trachea.",
+    "question": "Which structure is described as: The esophagus is a muscular tube transporting swallowed material from pharynx through thorax to stomach?",
+    "answer": "Esophagus",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-introduction",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e067",
+    "name": "Duodenum",
+    "system": "Visceral",
+    "region": "Abdomen",
+    "fact": "The duodenum is the first segment of small intestine and receives stomach chyme plus bile and pancreatic secretions.",
+    "short": "The duodenum is the first segment of small intestine and receives stomach chyme plus bile and pancreatic secretions.",
+    "function": "Begins much of intestinal chemical digestion and neutralizes acidic chyme.",
+    "description": "The duodenum is the first segment of small intestine and receives stomach chyme plus bile and pancreatic secretions.",
+    "relationships": "Stomach, pancreatic head, common bile duct and jejunum.",
+    "study_tip": "Find its C-shaped course around pancreatic head.",
+    "question": "Which structure is described as: The duodenum is the first segment of small intestine and receives stomach chyme plus bile and pancreatic secretions.?",
+    "answer": "Duodenum",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-introduction",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "e068",
+    "name": "Gallbladder",
+    "system": "Visceral",
+    "region": "Abdomen",
+    "fact": "The gallbladder is a small sac under the liver that concentrates and stores bile between meals, releasing it into bile ducts during digestion.",
+    "short": "The gallbladder is a small sac under the liver that concentrates and stores bile between meals, releasing it into bile ducts during digestion.",
+    "function": "Stores and concentrates bile that assists fat digestion.",
+    "description": "The gallbladder is a small sac under the liver that concentrates and stores bile between meals, releasing it into bile ducts during digestion.",
+    "relationships": "Liver, cystic duct and common bile duct.",
+    "study_tip": "Find it on the liver's inferior surface.",
+    "question": "Which structure is described as: The gallbladder is a small sac under the liver that concentrates and stores bile between meals, releasing it into bile ducts during digestion.?",
+    "answer": "Gallbladder",
+    "source_name": "OpenStax Anatomy and Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-introduction",
     "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
   }
 ]
