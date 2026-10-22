@@ -62,6 +62,7 @@ function context(){
   setExplosion(n){this.explodeAmount=n;return true}
  };
  const warnings=[];
+ document.getElementById("regionSide").value="both"; // matches the initial HTML select value
  api.installRegions(viewer,m=>warnings.push(m));
  return {document,viewer,api,warnings}
 }
