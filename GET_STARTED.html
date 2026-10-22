@@ -3,8 +3,16 @@
 <style>body{font:16px/1.7 system-ui,sans-serif;background:#0d2031;color:#f3f7f9;max-width:840px;margin:5vh auto;padding:24px}a{color:#84d7cb}code{background:#21374a;padding:2px 5px}h1{font-size:2rem}h2{margin-top:1.6rem}li{margin-bottom:8px}</style>
 <h1>Atlas Lab — Quick Start</h1>
 <p>This interactive anatomy website runs in a WebGL-enabled laptop browser; visitors do not need Python.</p>
-<h2>Move around the 3D anatomy</h2>
-<ol><li>Choose an <b>Interaction Tool</b>: <b>Rotate</b> to orbit around anatomy, <b>Move / pan</b> to drag the camera's view, or <b>Grab & pull</b> to separate a selected model structure.</li><li>Use your mouse wheel or trackpad gesture to zoom while staying in the same interaction mode.</li><li>Choose <b>Anatomical View</b> for anterior, posterior, left/right lateral, superior, inferior or oblique views. These change orientation without returning you to the full body.</li><li>Use <b>Explore a body region</b> to focus on skull, wrist, heart or another area, then change the anatomical system.</li><li>Click an anatomical mesh to select and label it. Double-click to focus the selected part. Click again to deselect.</li></ol>
+<h2>Move around the 3D anatomy — no tools to switch</h2>
+<ol>
+<li><b>Left-click and drag</b> the model to orbit left, right, up or down. Just click a structure to select it; click again to deselect.</li>
+<li><b>Right-click and drag</b> (or <b>Shift + left-drag</b>) to pan your view in any direction without rotating.</li>
+<li><b>Mouse wheel or trackpad pinch/scroll</b> to zoom in on a particular part of the body. On a touch screen, use one finger to rotate or two fingers to pan/zoom.</li>
+<li><b>Option/Alt + left-drag</b> directly on a selected mesh to pull it away, without switching navigation modes.</li>
+<li><b>Keyboard shortcuts:</b> arrow keys orbit around the current focus; W/A/S/D pan up/left/down/right; +/- zoom; F toggles fullscreen.</li>
+<li>Select a <b>Body Region</b> such as Wrist, Skull or Heart to jump there automatically. Choose Left/Right/Both as appropriate, then switch the anatomical system to examine its structures. If a requested system has no meshes there, the app explains the limitation and shows skeleton instead.</li>
+<li>Choose <b>Anatomical View</b> for anterior, posterior, left/right lateral, superior, inferior or oblique positions. The camera maintains its current focus and distance.</li>
+</ol>
 <h2>Learn structure and function</h2>
 <p>Selected structures display a short explanation and function in the model inspector. Choose <b>Anatomy Library</b> for reference-linked pages describing each curated structure, its purpose, its nearby relationships and study landmarks. You can search by structure name, system, region, or function, then choose <b>Locate in 3D</b>.</p>
 <h2>What the explanations cover</h2>
