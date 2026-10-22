@@ -1,6 +1,6 @@
 import {AnatomyViewer} from "./viewer.js";
 const $=id=>document.getElementById(id);
-let viewer,study=[],lessons=[],active=0,quiz=[],qi=0,score=0;let progress={studied:[],notes:{},scores:[]};
+let viewer,study=[],lessons=[],active=0,quiz=[],qi=0,score=0,meshExam=null;let progress={studied:[],notes:{},scores:[]};
 try{progress={...progress,...JSON.parse(localStorage.getItem("atlasLabV2")||"{}")}}catch{}
 const save=()=>{try{localStorage.setItem("atlasLabV2",JSON.stringify(progress))}catch{}};
 function show(page){document.querySelectorAll(".page").forEach(e=>e.classList.toggle("active",e.id==="page-"+page));document.querySelectorAll(".nav").forEach(e=>e.classList.toggle("active",e.dataset.page===page));$("pageHeading").textContent={lab:"Virtual Dissection Lab",lessons:"Guided Lessons",cards:"Anatomy Library",quiz:"Practice Exam",progress:"My Progress",sources:"Sources & Accuracy"}[page]||"Atlas Lab";if(page==="progress")renderProgress();if(page==="lab")viewer?.resize()}
@@ -8,6 +8,24 @@ document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>show(b.dataset.page))
 function status(message,error=false){$("modelStatus").textContent=message;$("source-status").textContent=message;if(error)$("installNotice").hidden=false}
 function sync(){if(!viewer)return;const all=[...viewer.registry.values()];$("countChip").textContent=all.length.toLocaleString()+" structures loaded";$("shownCount").textContent=viewer.visibleEntries().length+" visible";
  const selected=viewer.registry.get(viewer.selected);$("selectedEmpty").hidden=!!selected;$("selectedDetail").hidden=!selected;
+ if(meshExam && selected && selected.key!==meshExam.lastAnswer){
+   const target=meshExam.targets[meshExam.index];
+   const ok=selected.key===target.key;
+   meshExam.lastAnswer=selected.key;
+   if(ok) meshExam.correct++;
+   meshExam.index++;
+   if(meshExam.index>=meshExam.targets.length){
+     const final=meshExam;
+     progress.scores.push({date:new Date().toISOString(),mode:"3D identification",score:final.correct,total:final.targets.length});
+     save();
+     status("3D practical completed: "+final.correct+"/"+final.targets.length+". Open Practice Exam for your result.");
+     $("quizArea").innerHTML="<h2>3D practical result: "+final.correct+"/"+final.targets.length+"</h2><p>Questions are matched to the source model labels. Source mesh labels are not independently medically validated.</p>";
+     meshExam=null;
+   }else{
+     const next=meshExam.targets[meshExam.index];
+     status((ok?"Correct. ":"Not quite. ")+ "Identification "+(meshExam.index+1)+"/"+meshExam.targets.length+": click "+next.name+" ("+next.system+") on the actual 3D model.");
+   }
+ }
  if(selected){$("selectedSystem").textContent=selected.system;$("selectedName").textContent=selected.name;$("notes").value=progress.notes[selected.key]||"";$("markStudied").textContent=progress.studied.includes(selected.key)?"✓ Studied":"＋ Mark as studied";$("selectedExtras").textContent="Structure from the source anatomical mesh dataset; terminology not individually validated.";}
  $("layerList").innerHTML="";for(const s of viewer.systems()){let b=document.createElement("button");b.textContent=(viewer.enabled.has(s)?"☑ ":"□ ")+s;b.onclick=()=>viewer.setSystem(s,!viewer.enabled.has(s));$("layerList").append(b)}
 }
@@ -22,7 +40,18 @@ function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowe
 $("studySearch").oninput=renderCards;$("studyFilter").onchange=renderCards;
 $("startTextQuiz").onclick=()=>{quiz=[...study].sort(()=>Math.random()-.5).slice(0,Math.min(10,study.length));qi=0;score=0;renderQuestion()};
 function renderQuestion(){const box=$("quizArea");box.innerHTML="";if(qi>=quiz.length){const h=document.createElement("h2");h.textContent="Score: "+score+"/"+quiz.length;box.append(h);progress.scores.push({date:new Date().toISOString(),score,total:quiz.length});save();return}const c=quiz[qi],h=document.createElement("h3");h.textContent="Which description matches "+c.name+"? ("+(qi+1)+"/"+quiz.length+")";box.append(h);const choices=[c,...study.filter(x=>x.id!==c.id).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);for(const x of choices){let b=document.createElement("button");b.style.display="block";b.style.margin="9px 0";b.textContent=x.fact;b.onclick=()=>{if(x.id===c.id)score++;qi++;renderQuestion()};box.append(b)}}
-$("startMeshQuiz").onclick=()=>{const box=$("quizArea");box.innerHTML="";const p=document.createElement("p");p.textContent="3D identification practical: return to the dissection tab, then identify the requested structure by clicking it. Use the study library to choose a target and validate the source label.";const b=document.createElement("button");b.textContent="Open 3D lab";b.onclick=()=>show("lab");box.append(p,b)};
+$("startMeshQuiz").onclick=async()=>{
+ if(!viewer){$("quizArea").textContent="Wait for 3D anatomy to load before starting the identification exam.";return}
+ await viewer.setSystem("Skeleton",true);
+ const available=[...viewer.registry.values()].filter(x=>x.system==="Skeleton"&&x.name&&x.name.length>2&&x.name.length<65);
+ if(available.length<5){$("quizArea").textContent="There are not enough loaded 3D bone meshes to run this exam. Check the model status.";return}
+ const shuffled=[...available].sort(()=>Math.random()-.5);
+ const seen=new Set(),unique=shuffled.filter(x=>{const k=x.name.toLowerCase();if(seen.has(k))return false;seen.add(k);return true});
+ const targets=unique.slice(0,Math.min(10,unique.length));
+ meshExam={targets,index:0,correct:0,lastAnswer:viewer.selected};
+ show("lab");
+ status("3D identification 1/"+targets.length+": click "+targets[0].name+" on the actual 3D skeleton. Each click is scored.");
+};
 function renderProgress(){const e=$("progressView");e.innerHTML="";const h=document.createElement("h2");h.textContent=progress.studied.length+" structures marked studied";const p=document.createElement("p");p.textContent=progress.scores.length+" knowledge exams completed. Progress is stored only in this browser.";e.append(h,p)}
 $("exportBtn").onclick=()=>{const a=document.createElement("a"),url=URL.createObjectURL(new Blob([JSON.stringify(progress,null,2)],{type:"application/json"}));a.href=url;a.download="atlas-lab-progress.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)};
 $("importFile").onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text());if(!Array.isArray(data.studied)||!data.notes)throw Error("Invalid progress file");progress=data;save();renderProgress()}catch(err){alert(err.message)}};
