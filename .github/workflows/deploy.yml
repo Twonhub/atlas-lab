@@ -28,7 +28,7 @@ jobs:
           python3 -m json.tool lessons.json >/dev/null
           mkdir -p _site/models
           base=https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models
-          for layer in skeletal joints muscular arterial venous nervous visceral; do
+          for layer in skeletal joints muscular cardiovascular lymphatic nervous visceral; do
             echo "Downloading verified geometry: ${layer}"
             curl -fL --retry 4 --retry-delay 3 "${base}/${layer}.glb" -o "_site/models/${layer}.glb"
             python3 - "${layer}" <<'PYVALID'
