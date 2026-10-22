@@ -74,10 +74,6 @@ $("markStudied").onclick=()=>{if(!viewer?.selected)return;if(!progress.studied.i
 $("meshSearch").oninput=()=>{const q=$("meshSearch").value.trim(),list=$("searchResults");list.innerHTML="";if(q.length<2)return;for(const e of [...viewer.registry.values()].filter(e=>e.name.toLowerCase().includes(q.toLowerCase())).slice(0,25)){const b=document.createElement("button");b.textContent=e.name+" · "+e.system;b.onclick=()=>{viewer.enabled.add(e.system);if(viewer.regionFilter&&!viewer.regionFilter.has(e.key))viewer.clearRegion?.();viewer.select(e.key,true);if(viewer.selected)viewer.focus(e);$("meshSearch").value=e.name;list.innerHTML=""};list.append(b)}};
 $("clearSearch").onclick=()=>{$("meshSearch").value="";$("searchResults").innerHTML=""};
 $("backToLibrary").onclick=()=>show("cards");
-$("panMode").onclick=()=>{if(!viewer)return;viewer.setPanMode(!viewer.panMode);$("panMode").setAttribute("aria-pressed",String(viewer.panMode));$("panMode").textContent="✥ Pan mode: "+(viewer.panMode?"On":"Off")};
-$("zoomIn").onclick=()=>viewer?.zoom(.72);$("zoomOut").onclick=()=>viewer?.zoom(1.4);
-$("panLeft").onclick=()=>viewer?.pan(105,0);$("panRight").onclick=()=>viewer?.pan(-105,0);
-$("panUp").onclick=()=>viewer?.pan(0,-105);$("panDown").onclick=()=>viewer?.pan(0,105);
 $("focusSelection").onclick=()=>{const e=viewer?.registry.get(viewer.selected);if(e)viewer.focus(e);else status("Select a structure, or choose a region to focus on.")};
 function fitWorkspace(){
  if(document.fullscreenElement)return;
