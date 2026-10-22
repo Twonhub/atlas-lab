@@ -1,4 +1,5 @@
 import {installDissection} from "./dissection.js";
+import {installRegions} from "./regions.js";
 import {AnatomyViewer} from "./viewer.js";
 const $=id=>document.getElementById(id);
 let lessonSession=null;
@@ -28,15 +29,25 @@ function sync(){if(!viewer)return;const all=[...viewer.registry.values()];$("cou
      status((ok?"Correct. ":"Not quite. ")+ "Identification "+(meshExam.index+1)+"/"+meshExam.targets.length+": click "+next.name+" ("+next.system+") on the actual 3D model.");
    }
  }
- if(selected){$("selectedSystem").textContent=selected.system;$("selectedName").textContent=selected.name;$("notes").value=progress.notes[selected.key]||"";$("markStudied").textContent=progress.studied.includes(selected.key)?"✓ Studied":"＋ Mark as studied";$("selectedExtras").textContent="Structure from the source anatomical mesh dataset; terminology not individually validated.";}
+ if(selected){$("selectedSystem").textContent=selected.system;$("selectedName").textContent=selected.name;$("notes").value=progress.notes[selected.key]||"";$("markStudied").textContent=progress.studied.includes(selected.key)?"✓ Studied":"＋ Mark as studied";
+  const card=study.find(c=>c.system===selected.system&&(c.name.toLowerCase()===selected.name.toLowerCase()||selected.name.toLowerCase().startsWith(c.name.toLowerCase()+" ")));
+  $("selectedExtras").textContent=card?card.fact+" — Educational summary; use source reference for verification.":"Structure name from source 3D dataset; not independently clinically validated.";
+ }
+ document.querySelectorAll("[data-study-id]").forEach(b=>{const card=study.find(c=>c.id===b.dataset.studyId);const e=card&&viewer.find(card.name,card.system);b.classList.toggle("active",!!(e&&e.key===viewer.selected))});
  $("layerList").innerHTML="";for(const s of viewer.systems()){let b=document.createElement("button");b.textContent=(viewer.enabled.has(s)?"☑ ":"□ ")+s;b.onclick=()=>viewer.setSystem(s,!viewer.enabled.has(s));$("layerList").append(b)}
 }
 for(const [id,action] of [["hideSelected","hide"],["isolateSelected","isolate"],["ghostSelected","ghost"],["focusSelected","focus"],["showAll","showAll"]])$(id).onclick=()=>viewer?.act(action);
 $("viewFront").onclick=()=>viewer?.view("front");$("viewBack").onclick=()=>viewer?.view("back");$("viewSide").onclick=()=>viewer?.view("side");$("viewReset").onclick=()=>viewer?.fitAll();$("undo").onclick=()=>viewer?.undo();$("unselect").onclick=()=>viewer?.select(null);
 $("notes").oninput=()=>{if(viewer?.selected){progress.notes[viewer.selected]=$("notes").value;save()}};
 $("markStudied").onclick=()=>{if(!viewer?.selected)return;if(!progress.studied.includes(viewer.selected))progress.studied.push(viewer.selected);save();sync()};
-$("meshSearch").oninput=()=>{const q=$("meshSearch").value.trim(),list=$("searchResults");list.innerHTML="";if(q.length<2)return;for(const e of [...viewer.registry.values()].filter(e=>e.name.toLowerCase().includes(q.toLowerCase())).slice(0,25)){const b=document.createElement("button");b.textContent=e.name+" · "+e.system;b.onclick=()=>{viewer.enabled.add(e.system);viewer.select(e.key);viewer.focus(e);$("meshSearch").value=e.name;list.innerHTML=""};list.append(b)}};
+$("meshSearch").oninput=()=>{const q=$("meshSearch").value.trim(),list=$("searchResults");list.innerHTML="";if(q.length<2)return;for(const e of [...viewer.registry.values()].filter(e=>e.name.toLowerCase().includes(q.toLowerCase())).slice(0,25)){const b=document.createElement("button");b.textContent=e.name+" · "+e.system;b.onclick=()=>{viewer.enabled.add(e.system);if(viewer.regionFilter&&!viewer.regionFilter.has(e.key))viewer.clearRegion?.();viewer.select(e.key,true);if(viewer.selected)viewer.focus(e);$("meshSearch").value=e.name;list.innerHTML=""};list.append(b)}};
 $("clearSearch").onclick=()=>{$("meshSearch").value="";$("searchResults").innerHTML=""};
+$("backToLibrary").onclick=()=>show("cards");
+$("panMode").onclick=()=>{if(!viewer)return;viewer.setPanMode(!viewer.panMode);$("panMode").setAttribute("aria-pressed",String(viewer.panMode));$("panMode").textContent="✥ Pan mode: "+(viewer.panMode?"On":"Off")};
+$("zoomIn").onclick=()=>viewer?.zoom(.72);$("zoomOut").onclick=()=>viewer?.zoom(1.4);
+$("panLeft").onclick=()=>viewer?.pan(105,0);$("panRight").onclick=()=>viewer?.pan(-105,0);
+$("panUp").onclick=()=>viewer?.pan(0,-105);$("panDown").onclick=()=>viewer?.pan(0,105);
+$("focusSelection").onclick=()=>{const e=viewer?.registry.get(viewer.selected);if(e)viewer.focus(e);else status("Select a structure, or choose a region to focus on.")};
 function renderLessons(){
   const menu=$("lessonMenu"),detail=$("lessonDetail");menu.innerHTML="";
   lessons.forEach((l,i)=>{const button=document.createElement("button");button.textContent=(i+1)+". "+l.title;button.onclick=()=>{active=i;renderLessons()};if(active===i)button.classList.add("active");menu.append(button)});
@@ -79,7 +90,12 @@ $("lessonFind").onclick=()=>focusLessonStep();
 $("lessonNext").onclick=()=>{if(!lessonSession)return;const l=lessons[lessonSession.lesson];lessonSession.step=(lessonSession.step+1)%l.targets.length;focusLessonStep()};
 $("lessonHide").onclick=()=>{if(!viewer?.selected){updateLessonDock("Find a structure before hiding it.");return}viewer.act("hide");updateLessonDock("Structure hidden. Choose Next or Find target to continue.")};
 $("lessonExit").onclick=()=>{lessonSession=null;updateLessonDock()};
-function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;list.innerHTML="";const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&(c.name+" "+c.fact).toLowerCase().includes(q));for(const c of filtered){const b=document.createElement("button");b.textContent=c.name+" · "+c.system;b.onclick=()=>{const d=$("cardDetail");d.innerHTML="";const h=document.createElement("h2");h.textContent=c.name;const p=document.createElement("p");p.textContent=c.fact;const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener";a.textContent="Reference ↗";const v=document.createElement("button");v.textContent="Find in 3D";v.onclick=async()=>{show("lab");const found=await viewer.findAndFocus(c.name,c.system);if(!found)status("No matching mesh located for "+c.name+" in loaded systems.",true)};d.append(h,p,a,document.createElement("hr"),v)};list.append(b)}}
+function renderCards(){const list=$("studyList"),q=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;list.innerHTML="";const filtered=study.filter(c=>(filter==="all"||c.system===filter)&&(c.name+" "+c.fact).toLowerCase().includes(q));for(const c of filtered){const b=document.createElement("button");b.textContent=c.name+" · "+c.system;b.dataset.studyId=c.id;b.classList.toggle("active",!!(viewer&&viewer.selected===viewer.find(c.name,c.system)?.key));b.onclick=async()=>{const d=$("cardDetail");d.innerHTML="";const h=document.createElement("h2");h.textContent=c.name;const p=document.createElement("p");p.textContent=c.fact;const a=document.createElement("a");a.href=c.source;a.target="_blank";a.rel="noopener";a.textContent="Reference ↗";const v=document.createElement("button");v.textContent="Select / deselect in 3D";v.onclick=async()=>{show("lab");const found=await viewer.findAndFocus(c.name,c.system,{toggle:true});if(!found)status("No matching mesh located for "+c.name+" in loaded systems.");else status(found.deselected?c.name+" deselected.":found.entry.name+" highlighted on the model.")};
+ d.append(h,p,a,document.createElement("hr"),v);
+ if(viewer){const already=viewer.find(c.name,c.system);
+   if(already){if(viewer.selected===already.key)viewer.select(null);else{viewer.enabled.add(c.system);already.hidden=false;if(viewer.regionFilter&&!viewer.regionFilter.has(already.key))viewer.clearRegion?.();viewer.select(already.key)}}
+   else await viewer.setSystem(c.system,true).then(()=>{const entry=viewer.find(c.name,c.system);if(entry){viewer.select(entry.key)}else status("No matching source mesh located for "+c.name+".",false)});
+ }};list.append(b)}}
 $("studySearch").oninput=renderCards;$("studyFilter").onchange=renderCards;
 $("startTextQuiz").onclick=()=>{quiz=[...study].sort(()=>Math.random()-.5).slice(0,Math.min(10,study.length));qi=0;score=0;renderQuestion()};
 function renderQuestion(){const box=$("quizArea");box.innerHTML="";if(qi>=quiz.length){const h=document.createElement("h2");h.textContent="Score: "+score+"/"+quiz.length;box.append(h);progress.scores.push({date:new Date().toISOString(),score,total:quiz.length});save();return}const c=quiz[qi],h=document.createElement("h3");h.textContent="Which description matches "+c.name+"? ("+(qi+1)+"/"+quiz.length+")";box.append(h);const choices=[c,...study.filter(x=>x.id!==c.id).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);for(const x of choices){let b=document.createElement("button");b.style.display="block";b.style.margin="9px 0";b.textContent=x.fact;b.onclick=()=>{if(x.id===c.id)score++;qi++;renderQuestion()};box.append(b)}}
@@ -99,5 +115,7 @@ function renderProgress(){const e=$("progressView");e.innerHTML="";const h=docum
 $("exportBtn").onclick=()=>{const a=document.createElement("a"),url=URL.createObjectURL(new Blob([JSON.stringify(progress,null,2)],{type:"application/json"}));a.href=url;a.download="atlas-lab-progress.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)};
 $("importFile").onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text());if(!Array.isArray(data.studied)||!data.notes)throw Error("Invalid progress file");progress=data;save();renderProgress()}catch(err){alert(err.message)}};
 $("clearProgress").onclick=()=>{if(confirm("Reset saved study progress?")){progress={studied:[],notes:{},scores:[]};save();renderProgress()}};
-async function init(){try{[study,lessons]=await Promise.all([fetch("study_cards.json").then(r=>r.json()),fetch("lessons.json").then(r=>r.json())]);renderLessons();renderCards();const manifest=await fetch("asset_manifest.json").then(r=>r.json());viewer=new AnatomyViewer($("sceneRoot"),sync,status);sync();await viewer.configure(manifest);installDissection(viewer,status);sync()}catch(e){status("App initialization error: "+e.message,true);console.error(e)}}
+async function init(){try{[study,lessons]=await Promise.all([fetch("study_cards.json").then(r=>r.json()),fetch("lessons.json").then(r=>r.json())]);renderLessons();renderCards();const manifest=await fetch("asset_manifest.json").then(r=>r.json());viewer=new AnatomyViewer($("sceneRoot"),sync,status);sync();await viewer.configure(manifest);installDissection(viewer,status);installRegions(viewer,status);
+ viewer.renderer.domElement.addEventListener("dblclick",e=>{viewer.pick(e);const selected=viewer.registry.get(viewer.selected);if(selected)viewer.focus(selected)});
+ sync()}catch(e){status("App initialization error: "+e.message,true);console.error(e)}}
 init();
