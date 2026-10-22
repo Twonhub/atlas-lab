@@ -23,6 +23,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          node --check app.js
+          node --check viewer.js
+          node --check dissection.js
+          python3 - <<'PYLESSONS'
+          import json
+          lessons=json.load(open('lessons.json'))
+          assert len(lessons)>=6
+          assert all(l.get('system') and len(l.get('targets',[]))>=3 for l in lessons)
+          print('Validated',len(lessons),'3D guided lessons')
+          PYLESSONS
           python3 -m json.tool asset_manifest.json >/dev/null
           python3 -m json.tool study_cards.json >/dev/null
           python3 -m json.tool lessons.json >/dev/null
