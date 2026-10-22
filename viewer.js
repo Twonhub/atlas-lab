@@ -10,6 +10,9 @@ export class AnatomyViewer {
   this.renderer=new THREE.WebGLRenderer({antialias:true});this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));this.renderer.outputColorSpace=THREE.SRGBColorSpace;root.prepend(this.renderer.domElement);
   this.controls=new OrbitControls(this.camera,this.renderer.domElement);this.controls.enableDamping=true;
   this.controls.enablePan=true;this.controls.screenSpacePanning=true;this.controls.zoomToCursor=true;
+  this.controls.rotateSpeed=.65;this.controls.panSpeed=1.05;this.controls.zoomSpeed=1.15;
+  this.controls.minPolarAngle=.005;this.controls.maxPolarAngle=Math.PI-.005;
+  this.controls.touches={ONE:THREE.TOUCH.ROTATE,TWO:THREE.TOUCH.DOLLY_PAN};
   this.controls.mouseButtons={LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.PAN};
   this.panMode=false;this.labelHit=null;this.labelKey=null;
   this.callout=document.createElement("div");this.callout.id="selectedCallout";this.callout.hidden=true;
@@ -59,8 +62,40 @@ export class AnatomyViewer {
   this.callout.classList.toggle("flip-up",y>this.root.clientHeight-75);
   this.callout.querySelector(".label-name").textContent=entry.name+" · "+entry.system;
  }
- setPanMode(on){this.panMode=!!on;this.controls.mouseButtons.LEFT=on?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;
-   this.renderer.domElement.style.cursor=on?"move":"grab"}
+ setPanMode(on){
+   this.panMode=!!on;
+   this.controls.mouseButtons.LEFT=on?THREE.MOUSE.PAN:THREE.MOUSE.ROTATE;
+   this.controls.touches.ONE=on?THREE.TOUCH.PAN:THREE.TOUCH.ROTATE;
+   this.renderer.domElement.style.cursor=on?"move":"grab";
+ }
+ setTool(tool){
+   const mode=["rotate","pan","pull"].includes(tool)?tool:"rotate";
+   this.tool=mode;
+   this.setPanMode(mode==="pan");
+   if(typeof this.setGrabMode==="function")this.setGrabMode(mode==="pull");
+   this.renderer.domElement.style.cursor=mode==="pull"?"grab":mode==="pan"?"move":"grab";
+   return mode;
+ }
+ viewPreset(name){
+   const presets={
+    anterior:[[0,0,1],[0,1,0]],posterior:[[0,0,-1],[0,1,0]],
+    right:[[1,0,0],[0,1,0]],left:[[-1,0,0],[0,1,0]],
+    superior:[[0,1,0],[0,0,-1]],inferior:[[0,-1,0],[0,0,1]],
+    oblique:[[.72,.22,1],[0,1,0]]
+   };
+   const preset=presets[name];if(!preset)return false;
+   const target=this.controls.target.clone();
+   const radius=Math.max(this.camera.position.distanceTo(target),this.controls.minDistance*3,0.01);
+   const goal=new THREE.Vector3(...preset[0]).normalize().multiplyScalar(radius).add(target);
+   const up=new THREE.Vector3(...preset[1]);
+   this.controls.minPolarAngle=0;this.controls.maxPolarAngle=Math.PI;
+   this.camera.position.copy(goal);this.camera.up.copy(up);
+   this.camera.lookAt(target);
+   this.controls.update();
+   this.updateClipping();
+   this.labelHit=null;
+   return true;
+ }
  zoom(factor){const offset=this.camera.position.clone().sub(this.controls.target);
    const d=offset.length(),next=Math.max(this.controls.minDistance||.000001,Math.min(this.controls.maxDistance||1e9,d*factor));
    offset.setLength(next);this.camera.position.copy(this.controls.target).add(offset);this.controls.update();this.updateClipping()}
