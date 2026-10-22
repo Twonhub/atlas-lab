@@ -227,6 +227,6 @@ $("clearProgress").onclick=()=>{if(confirm("Reset saved study progress?")){progr
 async function init(){try{[study,lessons]=await Promise.all([fetch("study_cards.json").then(r=>r.json()),fetch("lessons.json").then(r=>r.json())]);renderLessons();renderCards();const manifest=await fetch("asset_manifest.json").then(r=>r.json());viewer=new AnatomyViewer($("sceneRoot"),sync,status);sync();await viewer.configure(manifest);installDissection(viewer,status);installRegions(viewer,status);
  viewer.setTool($("interactionTool").value);
  requestAnimationFrame(fitWorkspace);
- viewer.renderer.domElement.addEventListener("dblclick",e=>{viewer.pick(e);const selected=viewer.registry.get(viewer.selected);if(selected)viewer.focus(selected)});
+ viewer.renderer.domElement.addEventListener("dblclick",e=>{viewer.pick(e,false);const selected=viewer.registry.get(viewer.selected);if(selected)viewer.focus(selected)});
  sync()}catch(e){status("App initialization error: "+e.message,true);console.error(e)}}
 init();
