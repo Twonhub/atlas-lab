@@ -84,7 +84,7 @@ export function installDissection(viewer,notify) {
   },true);
   canvas.addEventListener("pointerup",e=>{if(drag){endDrag();e.stopImmediatePropagation()}},true);
   canvas.addEventListener("pointercancel",endDrag,true);
-  const norm=s=>String(s||"").toLowerCase().replace(/[_-]/g," ").replace(/\b(left|right)\b/g," ").replace(/\s+/g," ").trim();
+  const norm=s=>String(s||"").toLowerCase().replace(/\.(l|r)$/,"").replace(/[()]/g," ").replace(/[_-]/g," ").replace(/\b(left|right)\b/g," ").replace(/\s+/g," ").trim();
   viewer.locateStudyTarget=async(name,system)=>{
     if(!viewer.groups.has(system))await viewer.setSystem(system,true);
     const alias={"Lungs":["Lung"],"Kidney":["Kidneys"],"Atlas":["C1 vertebra"],"Axis":["C2 vertebra"]};
