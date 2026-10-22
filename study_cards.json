@@ -442,5 +442,53 @@
     "source_name": "OpenStax Anatomy & Physiology 2e",
     "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems",
     "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "cardio-right-atrium",
+    "name": "Right atrium",
+    "system": "Cardiovascular",
+    "region": "Thorax / Heart",
+    "fact": "Receives blood returning from systemic circulation through the venae cavae and sends it to the right ventricle.",
+    "question": "Which chamber receives systemic venous blood?",
+    "answer": "Right atrium",
+    "source_name": "OpenStax Anatomy & Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "cardio-right-ventricle",
+    "name": "Right ventricle",
+    "system": "Cardiovascular",
+    "region": "Thorax / Heart",
+    "fact": "Pumps blood into the pulmonary trunk toward the lungs.",
+    "question": "Which chamber pumps blood into the pulmonary circuit?",
+    "answer": "Right ventricle",
+    "source_name": "OpenStax Anatomy & Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "cardio-left-atrium",
+    "name": "Left atrium",
+    "system": "Cardiovascular",
+    "region": "Thorax / Heart",
+    "fact": "Receives oxygenated blood from the pulmonary veins and sends it into the left ventricle.",
+    "question": "Which chamber receives blood from the pulmonary veins?",
+    "answer": "Left atrium",
+    "source_name": "OpenStax Anatomy & Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
+  },
+  {
+    "id": "cardio-left-ventricle",
+    "name": "Left ventricle",
+    "system": "Cardiovascular",
+    "region": "Thorax / Heart",
+    "fact": "Pumps oxygenated blood into the aorta for systemic circulation.",
+    "question": "Which chamber pumps blood into the aorta?",
+    "answer": "Left ventricle",
+    "source_name": "OpenStax Anatomy & Physiology 2e",
+    "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "review_status": "Textbook-referenced educational summary; not independently clinically reviewed"
   }
 ]
