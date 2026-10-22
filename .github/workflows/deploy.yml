@@ -67,6 +67,18 @@ jobs:
           curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/LICENSE -o _site/UPSTREAM_LICENSE.txt
           curl -fL --retry 4 https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/NOTICE -o _site/UPSTREAM_NOTICE.txt
           cp index.html app.js viewer.js dissection.js regions.js model_naming.js anatomy_info.js styles.css study_cards.json lessons.json GET_STARTED.html ACCURACY_REVIEW.md DEPLOY_ONLINE.md MODEL_LICENSE_AND_ATTRIBUTION.md _site/
+          python3 - <<'PYCACHE'
+          import os,pathlib
+          version=os.environ["GITHUB_SHA"][:12]
+          for filename in ("index.html","app.js","viewer.js"):
+              path=pathlib.Path("_site")/filename
+              text=path.read_text()
+              for asset in ("app.js","viewer.js","dissection.js","regions.js","anatomy_info.js","model_naming.js","styles.css"):
+                  text=text.replace('"' + asset + '"','"' + asset + '?v=' + version + '"')
+                  text=text.replace('"./' + asset + '"','"./' + asset + '?v=' + version + '"')
+              path.write_text(text)
+          print("Versioned browser assets with commit:",version)
+          PYCACHE
           touch _site/.nojekyll
           python3 - <<'PYMANIFEST'
           import json,pathlib
