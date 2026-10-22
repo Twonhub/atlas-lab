@@ -192,6 +192,26 @@ export function installRegions(viewer,notify) {
 };sys.onchange=go;sideSelect.onchange=go;
  clear.onclick=()=>{viewer.clearRegion();viewer.fitAll()};
  viewer.navigateRegion=async(region,system="Skeleton")=>{if(!REGIONS.find(r=>r[0]===region))return false;select.value=region;sys.value=system;return go()};
+ viewer.openSelectedRegion=async()=>{
+   const part=viewer.registry.get(viewer.selected);
+   if(!part)return false;
+   const name=normalize(part.name);
+   let id=null;
+   if(part.system==="Cardiovascular"&&/\b(heart|atrium|ventricle|coronary)\b/.test(name))id="heart";
+   else{
+     // Prefer smaller and more specific regions for named skeletal parts.
+     const prioritized=["wrist","hand","ankle","foot","skull","neck","elbow","knee","shoulder","forearm","upperarm","thigh","leg","thorax","pelvis","spine","abdomen"];
+     for(const rid of prioritized){
+       const entry=REGIONS.find(r=>r[0]===rid);
+       if(entry?.[2].some(t=>alias(name,t))){id=rid;break}
+     }
+   }
+   if(!id)return false;
+   if(part.name.toLowerCase().endsWith(".l"))sideSelect.value="left";
+   else if(part.name.toLowerCase().endsWith(".r"))sideSelect.value="right";
+   return viewer.navigateRegion(id,part.system)
+ };
+
  viewer.onRegionSelectionChanged=()=>{if(viewer.activeRegion!=="whole")renderList()};
  window.addEventListener("keydown",e=>{if(e.key==="Escape"&&!["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)){viewer.select(null)}});
  info.textContent="Choose a body region and system to examine its component structures.";
