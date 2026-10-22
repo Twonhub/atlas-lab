@@ -60,14 +60,6 @@ for(const [id,action] of [["hideSelected","hide"],["isolateSelected","isolate"],
 $("viewReset").onclick=()=>viewer?.fitAll();
 $("undo").onclick=()=>viewer?.undo();
 $("unselect").onclick=()=>viewer?.select(null);
-$("interactionTool").onchange=e=>{
- if(!viewer)return;
- const mode=viewer.setTool(e.target.value);
- const messages={rotate:"Rotate mode: left drag to orbit. Wheel or two-finger trackpad gesture zooms toward the pointer.",
-  pan:"Pan mode: left drag to move the view. Wheel or pinch still zooms. Select Rotate to orbit again.",
-  pull:"Grab & Pull mode: drag a structure out for inspection. Choose Rotate or Pan when finished."};
- $("navigationHelp").textContent=messages[mode];
-};
 $("viewPosition").onchange=e=>{if(viewer&&e.target.value){viewer.viewPreset(e.target.value);status("Camera position: "+e.target.selectedOptions[0].textContent+" (zoom and selected region preserved).")}};
 $("notes").oninput=()=>{if(viewer?.selected){progress.notes[viewer.selected]=$("notes").value;save()}};
 $("markStudied").onclick=()=>{if(!viewer?.selected)return;if(!progress.studied.includes(viewer.selected))progress.studied.push(viewer.selected);save();sync()};
@@ -96,9 +88,22 @@ document.addEventListener("fullscreenchange",()=>{
 });
 window.addEventListener("resize",()=>requestAnimationFrame(fitWorkspace));
 window.addEventListener("keydown",e=>{
- if(e.key.toLowerCase()==="f"&&!["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)&&$("page-lab").classList.contains("active")){
-   e.preventDefault();fullscreenButton.click()
- }
+ if(!viewer||!$("page-lab").classList.contains("active")||e.altKey||e.metaKey||e.ctrlKey
+    ||["INPUT","TEXTAREA","SELECT","BUTTON"].includes(document.activeElement?.tagName))return;
+ const key=e.key.toLowerCase();
+ if(key==="f"){e.preventDefault();fullscreenButton.click();return}
+ if(key==="escape"){viewer.select(null);return}
+ const cameraActions={
+  arrowleft:()=>viewer.orbitKeyboard(-.10,0),
+  arrowright:()=>viewer.orbitKeyboard(.10,0),
+  arrowup:()=>viewer.orbitKeyboard(0,-.10),
+  arrowdown:()=>viewer.orbitKeyboard(0,.10),
+  a:()=>viewer.pan(65,0),d:()=>viewer.pan(-65,0),
+  w:()=>viewer.pan(0,-65),s:()=>viewer.pan(0,65),
+  "+":()=>viewer.zoom(.8),"=":()=>viewer.zoom(.8),
+  "-":()=>viewer.zoom(1.25),"_":()=>viewer.zoom(1.25)
+ };
+ if(cameraActions[key]){e.preventDefault();cameraActions[key]()}
 });
 function renderLessons(){
   const menu=$("lessonMenu"),detail=$("lessonDetail");menu.innerHTML="";
@@ -225,7 +230,7 @@ $("exportBtn").onclick=()=>{const a=document.createElement("a"),url=URL.createOb
 $("importFile").onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text());if(!Array.isArray(data.studied)||!data.notes)throw Error("Invalid progress file");progress=data;save();renderProgress()}catch(err){alert(err.message)}};
 $("clearProgress").onclick=()=>{if(confirm("Reset saved study progress?")){progress={studied:[],notes:{},scores:[]};save();renderProgress()}};
 async function init(){try{[study,lessons]=await Promise.all([fetch("study_cards.json").then(r=>r.json()),fetch("lessons.json").then(r=>r.json())]);renderLessons();renderCards();const manifest=await fetch("asset_manifest.json").then(r=>r.json());viewer=new AnatomyViewer($("sceneRoot"),sync,status);sync();await viewer.configure(manifest);installDissection(viewer,status);installRegions(viewer,status);
- viewer.setTool($("interactionTool").value);
+ viewer.enableUnifiedNavigation();
  requestAnimationFrame(fitWorkspace);
  viewer.renderer.domElement.addEventListener("dblclick",e=>{viewer.pick(e,false);const selected=viewer.registry.get(viewer.selected);if(selected)viewer.focus(selected)});
  sync()}catch(e){status("App initialization error: "+e.message,true);console.error(e)}}
