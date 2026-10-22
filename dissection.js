@@ -104,8 +104,8 @@ export function installDissection(viewer,notify) {
   viewer.pullSelected=()=>{const e=viewer.registry.get(viewer.selected);if(!e)return false;e.pullOffset=e.pullOffset||new THREE.Vector3();const right=new THREE.Vector3().setFromMatrixColumn(viewer.camera.matrixWorld,0);e.pullOffset.addScaledVector(right,dimensions(e)*.30);viewer.apply();return true};
   viewer.returnSelected=()=>{const e=viewer.registry.get(viewer.selected);if(!e)return false;e.pullOffset=new THREE.Vector3();viewer.apply();return true};
   viewer.reassemble=()=>{viewer.explodeAmount=0;viewer.isolated=null;for(const e of viewer.registry.values()){e.hidden=false;e.ghost=false;e.pullOffset=new THREE.Vector3()}viewer.apply();viewer.fitAll()};
-  function endDrag(){drag=null;viewer.controls.enabled=true;canvas.style.cursor=viewer.grabMode?"grab":"auto"}
-  viewer.setGrabMode=enabled=>{viewer.grabMode=!!enabled;canvas.style.cursor=enabled?"grab":"auto";if(!enabled)endDrag()};
+  function endDrag(){drag=null;viewer.controls.enabled=true;canvas.style.cursor="grab"}
+  viewer.setGrabMode=enabled=>{viewer.grabMode=false;if(drag)endDrag()};
   viewer.setHighContrast=enabled=>{viewer.highContrast=!!enabled;viewer.renderer.toneMappingExposure=enabled?1.65:1.15;viewer.scene.background.set(enabled?0x07111c:0x0e2131)};
   function hit(e){
     const b=canvas.getBoundingClientRect(),v=new THREE.Vector2(2*(e.clientX-b.left)/b.width-1,1-2*(e.clientY-b.top)/b.height);
@@ -113,7 +113,7 @@ export function installDissection(viewer,notify) {
     return viewer.raycaster.intersectObjects([...viewer.registry.values()].flatMap(x=>x.meshes).filter(x=>x.visible),false)[0]?.object||null;
   }
   canvas.addEventListener("pointerdown",e=>{
-    if(!viewer.grabMode||e.button!==0)return;const m=hit(e);if(!m)return;
+    if((!e.altKey&&!viewer.grabMode)||e.button!==0||e.shiftKey)return;const m=hit(e);if(!m)return;
     viewer.select(m.userData.atlasKey);drag={key:m.userData.atlasKey,x:e.clientX,y:e.clientY};
     viewer.controls.enabled=false;canvas.setPointerCapture?.(e.pointerId);e.stopImmediatePropagation();
   },true);
@@ -123,7 +123,7 @@ export function installDissection(viewer,notify) {
     const scale=2*viewer.camera.position.distanceTo(viewer.controls.target)*Math.tan(viewer.camera.fov*Math.PI/360)/Math.max(1,canvas.clientHeight);
     const right=new THREE.Vector3().setFromMatrixColumn(viewer.camera.matrixWorld,0),up=new THREE.Vector3().setFromMatrixColumn(viewer.camera.matrixWorld,1);
     entry.pullOffset=entry.pullOffset||new THREE.Vector3();entry.pullOffset.addScaledVector(right,dx*scale).addScaledVector(up,-dy*scale);
-    move(entry);canvas.style.cursor="grabbing";e.stopImmediatePropagation();
+    move(entry);canvas.style.cursor="grabbing";e.preventDefault();e.stopImmediatePropagation();
   },true);
   canvas.addEventListener("pointerup",e=>{if(drag){endDrag();e.stopImmediatePropagation()}},true);
   canvas.addEventListener("pointercancel",endDrag,true);
